@@ -1,0 +1,236 @@
+body {
+    font-family: 'IBM Plex Mono', monospace;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        bottom: -100%;
+    }
+    to {
+        bottom: 10%; /* Distanza dal fondo una volta completata l'animazione */
+    }
+}
+
+.image-container {
+    animation: fadeIn 2s ease-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Adjust based on your carousel's height */
+    width: 100%;
+}
+
+.carousel {
+    height: 100vh;
+    width: 100vw;
+    background: black;
+
+}
+
+.carousel-item {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+
+.carousel-caption {
+    animation: fadeIn 2s ease-in;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    position: absolute;
+    bottom: 20px; /* Distanza dal fondo del carousel-item */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+}
+
+.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    padding: 10px;
+    height: 90%;
+    width: 80%;
+    display: block;
+    align-items: center;
+}
+
+.description {
+    position: absolute;
+    border-radius: 10px;
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+    display: block;
+    transform: translateY(30%);
+}
+
+.description-rules {
+    position: absolute;
+    border-radius: 10px;
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+    display: block;
+    transform: translateY(15%);
+}
+
+.content p {
+    animation: fadeIn 1s ease-in;
+    font-size: 17px;
+    color: white;
+}
+
+.content h4 {
+    animation: fadeIn 2s ease-in;
+    font-weight: bold;
+    color: white;
+}
+
+.container-title {
+    position: absolute;
+    top: 10%; /* Adjust based on your design */
+    left: 50%;
+    width: 700px;
+    height: 100px;
+    transform: translateX(-50%);
+    border-radius: 10px;
+}
+
+.carousel-title {
+    animation: fadeIn 1s ease-in;
+    position: absolute;
+    top: 10%; /* Adjust based on your design */
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff; /* Choose a color that fits your theme */
+    text-align: center;
+    z-index: 10;
+    width: 700px;
+    height: 100px; /* Ensure it's above the carousel images */
+
+}
+
+/* Custom button styles */
+.team-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.team-btn:hover {
+    background-color: #0056b3;
+}
+
+.carousel-indicators {
+    position: absolute;
+}
+
+.button-container {
+    animation: fadeIn 2s ease-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-img-kill-chain {
+    border: none; /* Rimuove il bordo */
+    cursor: pointer; /* Cambia il cursore in una mano per indicare che è cliccabile */
+    background-color: transparent;
+    padding: 0; /* Rimuove il padding */
+    transform: translate(0, 70%);
+    /* Rende lo sfondo trasparente */
+}
+.button-img-kill-chain:focus {
+    outline: none;
+}
+
+.button-img-factions {
+    border: none; /* Rimuove il bordo */
+    cursor: pointer; /* Cambia il cursore in una mano per indicare che è cliccabile */
+    background-color: transparent;
+    padding: 0; /* Rimuove il padding */
+    transform: translate(0, 10%);
+    /* Rende lo sfondo trasparente */
+}
+.button-img-factions:focus {
+    outline: none;
+}
+
+.button-img-kill-chain img {
+    width: 80%; /* Imposta la larghezza dell'immagine */
+    height: 80%;
+    object-fit: cover; /* Mantiene il rapporto d'aspetto dell'immagine */
+}
+
+.button-img-factions img {
+    width: 50%; /* Imposta la larghezza dell'immagine */
+    height: 50%;
+    object-fit: cover; /* Mantiene il rapporto d'aspetto dell'immagine */
+}
+
+.button-img-kill-chain img:hover {
+    transform: scale(1.1); /* Enlarge the image */
+    transition: transform 0.5s ease; /* Smooth transition */
+}
+.button-img-factions img:hover {
+    transform: scale(1.1); /* Enlarge the image */
+    transition: transform 0.5s ease; /* Smooth transition */
+}
+
+.info-popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -110%);
+    background-color: gray;
+    border: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.faction-description{
+    transform: translateY(10%);
+    display: block;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.faction-description h4{
+    color: white;
+
+}
+.form_username{
+    animation: fadeIn 1s ease-in;
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+.button-container-form {
+    margin-top: 20px;
+    animation: fadeIn 1s ease-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}

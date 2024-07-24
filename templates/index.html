@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reich Hackers</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
+</head>
+<body>
+<div id="rulesCarousel" class="carousel slide" data-interval="false">
+    <ol class="carousel-indicators">
+        <li data-target="#rulesCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#rulesCarousel" data-slide-to="1"></li>
+        <li data-target="#rulesCarousel" data-slide-to="2"></li>
+        <li data-target="#rulesCarousel" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+                <div class="container-title">
+                    <h2 class="carousel-title">Benvenuto su Reich Hackers</h2>
+                </div>
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='images/Reich_Hacker_short.jpg')}}">
+                </div>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Il Wargame</h5>
+                    <p>Benvenuti in Reich Hackers, un wargame ambientato nella Seconda Guerra Mondiale con una componente cyber.</p>
+                </div>
+        </div>
+        <div class="carousel-item">
+                <div class="content">
+                    <div class="container-title">
+                        <h4 class="carousel-title">Reich Hackers: Il Wargame Cyber della Seconda Guerra Mondiale</h4>
+                    </div>
+                    <div class="description">
+                        <p>Benvenuti in Reich Hackers, dove il passato incontra il futuro in un'epica battaglia cibernetica
+                            ambientata nella Seconda Guerra Mondiale. In questo wargame strategico unico nel suo genere,
+                            la tua abilità come comandante digitale sarà messa alla prova mentre ti immergi nel mondo delle
+                            operazioni di hacking durante uno dei periodi più tumultuosi della storia.</p>
+
+                        <h4>La storia</h4>
+                        <p>Anno 1943. Le nazioni in guerra non combattono solo sui campi di battaglia tradizionali,
+                            ma anche su un nuovo fronte: il cyberspazio. I segreti militari, le comunicazioni critiche
+                            e le infrastrutture vitali sono tutti a rischio. In "Reich Hackers", ti troverai a capo di
+                            una squadra di elite di hacker della tua fazione, incaricato di infiltrarti nelle reti nemiche,
+                            difendere le tue risorse e cambiare le sorti della guerra. </p>
+                    </div>
+                </div>
+        </div>
+        <div class="carousel-item" id="carousel-item">
+            <div class="content">
+                <div class="container-title">
+                    <h4 class="carousel-title">Reich Hackers: Come giocare</h4>
+                </div>
+                <div class="description-rules">
+                    <h4>Obiettivo</h4>
+                    <p>L'obiettivo principale, all'interno di <bold>Reich Hackes</bold>, è ottenere il controllo del database avversario.
+                       Per giungere a questo obiettivo, dovrai utilizzare combinazioni di ricognizione,
+                       attacco e difesa per ottenere un vantaggio decisivo sul nemico.</p>
+                    <h4>Il Gameplay: La Cyber Kill Chain</h4>
+                    <p>Il gameplay di <bold>Reich Hackers</bold> si svolge lungo le fasi della Kill Chain Cyber, un framework che delinea le diverse fasi di un attacco cibernetico.</p>
+                    <div class="button-container">
+                        <button class="button-img-kill-chain" onclick="getDescriptions(event)"><img id="rec" src="{{ url_for('static', filename='images/cyber_kill_chain/reconnaissance.png')}}"></button>
+                        <button class="button-img-kill-chain" onclick="getDescriptions(event)"><img id="wea" src="{{ url_for('static', filename='images/cyber_kill_chain/weap.png')}}"></button>
+                        <button class="button-img-kill-chain" onclick="getDescriptions(event)"><img id="del" src="{{ url_for('static', filename='images/cyber_kill_chain/del.png')}}"></button>
+                        <button class="button-img-kill-chain" onclick="getDescriptions(event)"><img id="exp" src="{{ url_for('static', filename='images/cyber_kill_chain/exploit.png')}}"></button>
+                        <button class="button-img-kill-chain" onclick="getDescriptions(event)"><img id="ins" src="{{ url_for('static', filename='images/cyber_kill_chain/installation.png')}}"></button>
+                        <button class="button-img-kill-chain" onclick="getDescriptions(event)"><img id="com" src="{{ url_for('static', filename='images/cyber_kill_chain/comand.png')}}"></button>
+                        <button class="button-img-kill-chain" onclick="getDescriptions(event)"><img id="act" src="{{ url_for('static', filename='images/cyber_kill_chain/actions.png')}}"></button>
+                    </div>
+                    <div id="infoPopup" class="info-popup">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+                <div class="content">
+                    <div class="container-title">
+                        <h4 class="carousel-title">Reich Hackers: Le fazioni coinvolte</h4>
+                    </div>
+                    <div class="description-rules">
+                        <p><bold>Alleati o Potenze dell'Asse</bold>: La scelta è tua. Ogni fazione ha i propri punti di forza, debolezze e
+                            tecnologie uniche. Sarai in grado di scegliere la fazione che meglio si adatta al tuo stile di gioco strategico..</p>
+                        <h4>È ora di scegliere</h4>
+                        <p>Prima di iniziare la tua avventura in <bold>Reich Hackers</bold>, dovrai scegliere da che parte stare. Scegli con saggezza,
+                            poiché la tua scelta determinerà il tuo destino e quello della tua squadra.</p>
+
+                        <div class="button-container">
+                            <div class="faction-description">
+                                <h4>Alleati</h4>
+                                <button id="navigateAllies" class="button-img-factions"><img id="allies" src="{{ url_for('static', filename='images/factions/allies.png')}}"></button>
+                            </div>
+                            <div class="faction-description">
+                                <h4>Potenze Dell'asse</h4>
+                                <button id="navigateAxis" class="button-img-factions"><img id="axis" src="{{ url_for('static', filename='images/factions/axis.png')}}"></button>
+                            </div>
+                        </div>
+                        <div id="insert_username" class="info-popup">
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#rulesCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#rulesCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='js/script_index.js') }}"></script>
+</body>
+</html>
