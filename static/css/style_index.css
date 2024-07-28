@@ -34,14 +34,14 @@ body {
 }
 
 .carousel {
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     background: black;
 
 }
 
 .carousel-item {
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     position: relative;
 }
@@ -184,8 +184,8 @@ body {
 }
 
 .button-img-factions img {
-    width: 50%; /* Imposta la larghezza dell'immagine */
-    height: 50%;
+    width: 40%; /* Imposta la larghezza dell'immagine */
+    height: 40%;
     object-fit: cover; /* Mantiene il rapporto d'aspetto dell'immagine */
 }
 
@@ -234,4 +234,13 @@ body {
     justify-content: center;
     align-items: center;
     gap: 20px;
+}
+.navbar{
+    background-color: black;
+    color: white;
+    justify-content: flex-end;
+}
+.btn-start{
+    float: right;
+    margin-right: 20px;
 }

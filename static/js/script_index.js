@@ -1,14 +1,26 @@
-document.getElementById('navigateAxis').addEventListener('click', function() {
-    window.location.href = '/homepage_game_axis';
-});
-document.getElementById('navigateAllies').addEventListener('click', function() {
-    window.location.href = '/homepage_game_allies';
 
+document.getElementById('start').addEventListener('click', function() {
+    window.location.href = '/login_player';
 });
+
+
+ // Add JavaScript to handle the click event
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            $('#rulesCarousel').carousel($(targetElement).index());
+        }
+    });
+});
+
 function getDescriptions(event) {
     var clickedButton = event.target.id;
     var title = "";
     var description = "";
+    var popupName = "infoPopup";
     switch (clickedButton) {
         case "rec":
             title = "Ricognizione";
@@ -40,7 +52,7 @@ function getDescriptions(event) {
             break;
 
     }
-    showPopup(title, description);
+    showPopup(title, description,popupName);
 }
 function setFaction(event) {
     var faction = event.target.id;
@@ -102,13 +114,15 @@ function insertUsername(Title, description, faction) {
     div.style.display = "block";
 
 }
-function showPopup(title, description) {
-    var popup = document.getElementById("infoPopup");
+function showPopup(title, description,popupName) {
+    var popup = document.getElementById(popupName);
     var h4 = document.createElement("h4");
     var p = document.createElement("p");
     var closeButton = document.createElement("button");
 
     h4.innerHTML = title;
+
+
     p.innerHTML = description;
     closeButton.innerHTML = "Chiudi";
     closeButton.onclick = closePopup;
@@ -125,7 +139,7 @@ function closePopup() {
     var popup = document.getElementById("infoPopup");
     if(popup.style.display == "block")
         popup.style.display = "none";
-    var div = document.getElementById("insert_username");
+    var div = document.getElementById("infoPopup-2");
     if(div.style.display == "block")
         div.style.display = "none";
 }

@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
 </head>
 <body>
+<!-- Image and text -->
+<div class="navbar">
+    <button id="start" class="btn btn-light btn-start">Inizia a Giocare</button>
+</div>
 <div id="rulesCarousel" class="carousel slide" data-interval="false">
     <ol class="carousel-indicators">
         <li data-target="#rulesCarousel" data-slide-to="0" class="active"></li>
@@ -20,7 +24,7 @@
         <li data-target="#rulesCarousel" data-slide-to="3"></li>
     </ol>
     <div class="carousel-inner">
-        <div class="carousel-item active">
+        <div class="carousel-item active" id="home">
                 <div class="container-title">
                     <h2 class="carousel-title">Benvenuto su Reich Hackers</h2>
                 </div>
@@ -32,7 +36,7 @@
                     <p>Benvenuti in Reich Hackers, un wargame ambientato nella Seconda Guerra Mondiale con una componente cyber.</p>
                 </div>
         </div>
-        <div class="carousel-item">
+        <div class="carousel-item" id="contesto">
                 <div class="content">
                     <div class="container-title">
                         <h4 class="carousel-title">Reich Hackers: Il Wargame Cyber della Seconda Guerra Mondiale</h4>
@@ -78,7 +82,7 @@
                 </div>
             </div>
         </div>
-        <div class="carousel-item">
+        <div class="carousel-item" id="fazioni">
                 <div class="content">
                     <div class="container-title">
                         <h4 class="carousel-title">Reich Hackers: Le fazioni coinvolte</h4>
@@ -100,7 +104,7 @@
                                 <button id="navigateAxis" class="button-img-factions"><img id="axis" src="{{ url_for('static', filename='images/factions/axis.png')}}"></button>
                             </div>
                         </div>
-                        <div id="insert_username" class="info-popup">
+                        <div id="infoPopup-2" class="info-popup">
                         </div>
                     </div>
                 </div>
@@ -115,7 +119,23 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
+<script>
+    document.getElementById('navigateAxis').addEventListener('click', function() {
+        {% if player == null %}
+            showPopup("Attenzione", "Per poter giocare devi essere autenticato.","infoPopup-2");
+        {% else %}
+            window.location.href = '/login_player';
+        {% endif %}
+    });
+    document.getElementById('navigateAllies').addEventListener('click', function() {
+        {% if player == null %}
+            showPopup("Attenzione", "Per poter giocare devi essere autenticato.","infoPopup-2");
+        {% else %}
+            window.location.href = '/login_player';
+        {% endif %}
 
+    });
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

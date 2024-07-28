@@ -1,6 +1,4 @@
 class Player:
-
-
     def __init__(self, username, faction):
         self.username = username
         self.faction = faction
