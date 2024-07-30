@@ -143,3 +143,16 @@ function closePopup() {
     if(div.style.display == "block")
         div.style.display = "none";
 }
+function deleteContent(event) {
+    event.preventDefault()
+    var username = document.getElementById("username");
+    username.value = "";
+    var password = document.getElementById("password");
+    password.value = "";
+    var email = document.getElementById("email");
+    email.value = "";
+    var name = document.getElementById("name");
+    name.value = "";
+    var surname = document.getElementById("surname");
+    surname.value = "";
+}

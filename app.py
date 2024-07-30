@@ -9,16 +9,15 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/checkDB/')
-def checkDB():
-    string = ""
-    if dbController:
-        string += "Connection Success \n"
-        collections = dbController.getCollections()
-        for collection in collections:
-            string += "Collection: " + collection.id + "\n"
-    else:
-        string = "Connection Failed"
+# This following routes are for the views
+@app.route('/registrationView')
+def registrationView():
+    return render_template('registration_player.html')
+
+@app.route('/loginView')
+def loginView():
+    return render_template('login_player.html')
+
 @app.route('/homepage_game_allies')
 def homepage_game_allies():
     Player1 = Player("Piero", "Allies")
@@ -29,9 +28,7 @@ def homepage_game_allies():
 def homepage_game_axis():
     return render_template('vistaAsse/index.html')
 
-@app.route('/login_player')
-def register_player():
-    return render_template('vistaAlleati/register_player.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
