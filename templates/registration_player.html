@@ -25,6 +25,13 @@
     <div class="image-background-form">
         <div class="container">
             <h2>REGISTRAZIONE PLAYER</h2>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                  {{ messages[0] }}
+                </div>
+              {% endif %}
+            {% endwith %}
             <form action="/registrationController" method="post">
                 <div class="form-group">
                     <label for="username">Username:</label>
@@ -54,7 +61,7 @@
                 </div>
                  <div class="btn-group">
                     <input type="submit" name="submit" value="Registrati" class="btn-submit">
-                    <button class="btn-cancel" onclick="deleteContent(event)">Annulla</button>
+                    <button class="btn-cancel" onclick='deleteContent(event,"registration")'>Annulla</button>
                 </div>
             </form>
             <a href="/loginView">Hai già un account? Accedi</a>

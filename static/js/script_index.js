@@ -143,16 +143,27 @@ function closePopup() {
     if(div.style.display == "block")
         div.style.display = "none";
 }
-function deleteContent(event) {
+function deleteContent(event,type) {
     event.preventDefault()
-    var username = document.getElementById("username");
-    username.value = "";
-    var password = document.getElementById("password");
-    password.value = "";
-    var email = document.getElementById("email");
-    email.value = "";
-    var name = document.getElementById("name");
-    name.value = "";
-    var surname = document.getElementById("surname");
-    surname.value = "";
+    if(type == 'registration') {
+        var username = document.getElementById("username");
+        username.value = "";
+        var password = document.getElementById("password");
+        password.value = "";
+        var confirmPassword = document.getElementById("confirm_password");
+        confirmPassword.value = "";
+        var email = document.getElementById("email");
+        email.value = "";
+        var name = document.getElementById("name");
+        name.value = "";
+        var surname = document.getElementById("surname");
+        surname.value = "";
+    }
+    if(type == 'login') {
+        var password = document.getElementById("password");
+        password.value = "";
+        var email = document.getElementById("email");
+        email.value = "";
+    }
+
 }

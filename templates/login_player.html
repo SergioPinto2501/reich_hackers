@@ -24,11 +24,18 @@
     </nav>
     <div class="image-background-form">
         <div class="container">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                  {{ messages[0] }}
+                </div>
+              {% endif %}
+            {% endwith %}
             <h2>LOGIN PLAYER</h2>
             <form action="/loginController" method="post">
                 <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" class="form-control" id="username" placeholder="Inserisci username" name="username">
+                    <label for="username">E-mail:</label>
+                    <input type="text" class="form-control" id="email" placeholder="Inserisci email" name="email">
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
@@ -36,7 +43,7 @@
                 </div>
                 <div class="btn-group">
                     <input type="submit" name="submit" value="Accedi" class="btn-submit">
-                    <button class="btn-cancel" onclick="deleteContent(event)">Annulla</button>
+                    <button class="btn-cancel" onclick='deleteContent(event,"login")'>Annulla</button>
                 </div>
             </form>
             <a href="/registrationView">Non hai un Account? Registrati</a>
