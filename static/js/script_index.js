@@ -54,71 +54,14 @@ function getDescriptions(event) {
     }
     showPopup(title, description,popupName);
 }
-function setFaction(event) {
-    var faction = event.target.id;
-    var title = "";
-    if(faction == 'allies')
-        title = "Alleati";
-    else
-        title = "Potenze dell'Asse";
 
-    var descrizione = "Inserisci il tuo username per iniziare a giocare con la fazione " + title;
-    insertUsername(title, descrizione,faction);
-}
-function insertUsername(Title, description, faction) {
-    var div = document.getElementById("insert_username");
-    var divButton = document.createElement("div");
-    var h4 = document.createElement("h4");
-    var p = document.createElement("p");
-    var form = document.createElement("form");
-
-    var input = document.createElement("input");
-    var submit = document.createElement("button");
-    var button = document.createElement("button");
-
-    h4.innerHTML = Title;
-    p.innerHTML = description;
-
-    form.setAttribute("id", "form_username");
-    form.setAttribute("method", "POST");
-    form.setAttribute("action", "/homepage_game");
-    form.setAttribute("class", "form_username");
-
-
-    input.setAttribute("type", "text");
-    input.setAttribute("name", "username");
-    input.setAttribute("id", "username");
-    input.setAttribute("hint", "Username...");
-    input.setAttribute("required", "true");
-    input.setAttribute("placeholder", "Username...");
-    input.setAttribute("style", "width: 100%;");
-
-    submit.innerHTML = "Inizia a giocare";
-    button.onclick = sendDataWithoutForm(faction);
-
-
-    button.innerHTML = "Annulla";
-    button.onclick = closePopup;
-
-    divButton.setAttribute("class", "button-container-form");
-
-
-    divButton.append(submit);
-    divButton.append(button);
-    form.append(input);
-    form.append(divButton);
-
-    div.append(h4);
-    div.append(p);
-    div.append(form);
-    div.style.display = "block";
-
-}
-function showPopup(title, description,popupName) {
+function showPopup(title, description,popupName,faction) {
+    event.preventDefault();
     var popup = document.getElementById(popupName);
     var h4 = document.createElement("h4");
     var p = document.createElement("p");
     var closeButton = document.createElement("button");
+    var newGame = document.createElement("button");
 
     h4.innerHTML = title;
 
@@ -126,11 +69,21 @@ function showPopup(title, description,popupName) {
     p.innerHTML = description;
     closeButton.innerHTML = "Chiudi";
     closeButton.onclick = closePopup;
+    newGame.innerHTML = "Nuova Partita";
+    newGame.onclick = createGame;
 
     popup.innerHTML = "";
     popup.append(h4);
     popup.append(p);
     popup.append(closeButton);
+    if(popupName == "new-game") {
+        if(faction == "axis") {
+            newGame.id = "axis";
+        }else
+            newGame.id = "allies";
+
+        popup.append(newGame);
+    }
 
     popup.style.display = "block";
 }
@@ -140,6 +93,9 @@ function closePopup() {
     if(popup.style.display == "block")
         popup.style.display = "none";
     var div = document.getElementById("infoPopup-2");
+    if(div.style.display == "block")
+        div.style.display = "none";
+    var div = document.getElementById("new-game");
     if(div.style.display == "block")
         div.style.display = "none";
 }
@@ -166,4 +122,15 @@ function deleteContent(event,type) {
         email.value = "";
     }
 
+}
+
+function createGame(event) {
+    var faction = event.target.id;
+    console.log(faction)
+    if(faction == "axis") {
+        window.location.href = '/create_game?side=axis';
+    }
+    if(faction == "allies") {
+        window.location.href = '/create_game?side=allies';
+    }
 }

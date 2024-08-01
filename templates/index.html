@@ -130,6 +130,8 @@
                         </div>
                         <div id="infoPopup-2" class="info-popup">
                         </div>
+                        <div id="new-game" class="new-game">
+                        </div>
                     </div>
                 </div>
         </div>
@@ -149,14 +151,14 @@
         {% if 'user' not in session %}
             showPopup("Attenzione", "Per poter giocare devi essere autenticato.","infoPopup-2");
         {% else %}
-            window.location.href = '/login_player';
+            showPopup("Nuova Partita", "Vuoi Iniziare una Nuova Partita?","new-game","axis");
         {% endif %}
     });
     document.getElementById('navigateAllies').addEventListener('click', function() {
         {% if 'user' not in session %}
             showPopup("Attenzione", "Per poter giocare devi essere autenticato.","infoPopup-2");
         {% else %}
-            window.location.href = '/login_player';
+            showPopup("Nuova Partita", "Vuoi Iniziare una Nuova Partita?","new-game","allies");
         {% endif %}
 
     });

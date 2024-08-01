@@ -3,6 +3,7 @@ from flask import Flask,render_template, request, redirect, url_for, flash, sess
 from classes.model.PlayerClasses import Player
 from classes.model.PlayerClasses import User
 from classes.controller.DatabaseController import DatabaseController
+from classes.model.NetworkNode import NetworkNode
 app = Flask(__name__)
 app.secret_key='reich_hackers'
 dbController = DatabaseController()
@@ -73,6 +74,27 @@ def loginController():
 def logout():
     session.pop('user', None)
     return redirect(url_for('index'))
+
+@app.route('/create_game', methods=['POST','GET'])
+def create_game():
+    selectedFaction = request.args.get('side')
+    if selectedFaction == "allies":
+        print("Alleati")
+    else:
+        if selectedFaction == "axis":
+            print("Asse")
+        else:
+            print("Errore")
+
+    player = Player(session['user']['username'], selectedFaction)
+    dbController.matchmacking(player)
+
+@app.route('/provaNodo')
+def provaNodo():
+    data = NetworkNode()
+    print(data.__str__())
+    return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
