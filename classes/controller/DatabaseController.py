@@ -2,8 +2,8 @@ import firebase_admin
 import logging
 import pyrebase
 from firebase_admin import credentials,auth,firestore
-from classes.model.PlayerClasses import User
-from classes.model.PlayerClasses import Player
+from classes.model.PlayerClassesModel import User
+from classes.model.PlayerClassesModel import Player
 logging.basicConfig(level=logging.DEBUG , format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 class DatabaseController:
     database = None
@@ -55,6 +55,8 @@ class DatabaseController:
             print(msg)
         return msg
 
+
+    #Implementare controllo se esiste già una partita con lo stesso giocare, non finita
     def matchmacking(self,player):
         flagPartitaTrovata = False
         doc_ref = self.database.collection("games").get()

@@ -1,9 +1,11 @@
 
 from flask import Flask,render_template, request, redirect, url_for, flash, session
-from classes.model.PlayerClasses import Player
-from classes.model.PlayerClasses import User
+from classes.model.PlayerClassesModel import Player
+from classes.model.PlayerClassesModel import User
 from classes.controller.DatabaseController import DatabaseController
-from classes.model.NetworkNode import NetworkNode
+from classes.model.NetworkNodeModel import NetworkNode
+from classes.model.NetworkModel import NetworkModel
+from classes.MitreAttackAPI import MitreAttackClass
 app = Flask(__name__)
 app.secret_key='reich_hackers'
 dbController = DatabaseController()
@@ -58,9 +60,7 @@ def registrationController():
 def loginController():
     email = request.form.get('email')
     password = request.form.get('password')
-
     returnValue = dbController.loginUser(email, password)
-
     if(isinstance(returnValue, User)):
         user = User(returnValue.username, returnValue.email, returnValue.name, returnValue.surname)
         print(user.toString())
@@ -89,12 +89,21 @@ def create_game():
     player = Player(session['user']['username'], selectedFaction)
     dbController.matchmacking(player)
 
+
 @app.route('/provaNodo')
 def provaNodo():
-    data = NetworkNode()
-    print(data.__str__())
-    return render_template('index.html')
+    network = NetworkModel()
+    nodes = network.get_nodes()
+    return render_template('mitreattack.html',data=nodes)
 
+
+
+#Da vedere come implemnteare la chiamata all'API
+@app.route('/mitreattack-api')
+def mitreattack_api():
+    api = MitreAttackClass()
+    technique = api.get_tecnique_by_id("T1003")
+    return render_template('mitreattack.html',data=technique)
 
 if __name__ == '__main__':
     app.run(debug=True)
