@@ -1,3 +1,4 @@
+import logging
 import random
 import string
 from typing import List, Dict, Optional, Any
@@ -8,10 +9,8 @@ class NetworkNode:
     def __init__(self, name, ip, type) -> None:
         self.name = name
         self.type = type
-
         self.os = self.generate_os()
         self.ip = ip
-
         self.open_ports = self.generate_open_ports()
         self.services = self.generate_services(vulnerabile_index=NetworkNode.vulnerable_random_numer)
 
@@ -39,9 +38,10 @@ class NetworkNode:
         port_to_add = 0
         NetworkNode.vulnerable_random_numer = random.randint(0, 10)
         if (NetworkNode.vulnerable_random_numer == 0):
-            print("Nodo non vulnerabile")
+            logging.info("Nodo non vulnerabile")
         else:
-            print("Nodo vulnerabile: ", NetworkNode.vulnerable_random_numer)
+            logging.info("Nodo vulnerabile - Vulnerabilità: "+ str(NetworkNode.vulnerable_random_numer))
+
         match NetworkNode.vulnerable_random_numer:
             case 1:
                 port_to_add = 21

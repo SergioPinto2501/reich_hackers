@@ -3,6 +3,8 @@ from typing import Any, Dict, List
 from classes.model.NetworkNodeModel import NetworkNode
 
 class NetworkModel:
+
+    nodes = []
     def __init__(self):
         self.nodes = self.generate_nodes()
 
@@ -40,11 +42,7 @@ class NetworkModel:
                 return ip
 
     def get_nodes(self) -> List[Dict[str, Any]]:
-        nodes = []
-        for node in self.nodes:
-            nodes.append(node.__dict__)
-        return nodes
-
+        return self.nodes
     def show_nodes(self):
         for node in self.nodes:
             print(node)
