@@ -1,6 +1,6 @@
 
 from flask import Flask,render_template, request, redirect, url_for, flash, session
-
+from flask import make_response
 from classes.controller.DatabaseController import DatabaseController
 from classes.controller.GameController import GameController
 from classes.model.GameModel import GameModel
@@ -29,10 +29,7 @@ def loginView():
 
 @app.route('/homepage_game_allies')
 def homepage_game_allies():
-    Player1 = Player("Piero", "Allies")
-    Player2 = Player("Player2", "Allies")
-    print(Player1.toString() + " vs " + Player2.toString())
-    return render_template('vistaAlleati/index.html', player=Player1)
+    return render_template('vistaAlleati/index.html')
 @app.route('/homepage_game_axis')
 def homepage_game_axis():
     return render_template('vistaAsse/index.html')
@@ -82,19 +79,24 @@ def logout():
 # Add a new route for the loading page
 @app.route('/loading')
 def loading():
-    return render_template('loading.html')
+    return render_template('vistaUtente/loadingView.html')
 
 # Modify the create_game route
 @app.route('/create_game', methods=['POST', 'GET'])
 def create_game():
     selectedFaction = request.args.get('side')
+    session['selectedFaction'] = selectedFaction
+    return redirect(url_for('loading'))
+
+@app.route('/inizialization_game')
+def perform_backend_operations():
+    selectedFaction = session.get('selectedFaction')
     if selectedFaction == "allies":
         selectedFaction = "Alleati"
+    elif selectedFaction == "axis":
+        selectedFaction = "Asse"
     else:
-        if selectedFaction == "axis":
-            selectedFaction = "Asse"
-        else:
-            print("Errore")
+        print("Errore")
 
     player = Player(session['user']['username'], selectedFaction)
     game_controller = GameController()
@@ -102,10 +104,7 @@ def create_game():
 
     session['game_id'] = game.get_game_id()
     session['faction'] = selectedFaction
-    # Redirect to the loading page
-    return redirect(url_for('loading'))
-
-
+    return {'status': 'success'}
 @app.route('/check_game_status')
 def check_game_status():
     # Recupera l'ID del gioco dalla sessione
@@ -124,9 +123,6 @@ def check_game_status():
     # Se l'ID del gioco non esiste o il documento non esiste, restituisce una risposta JSON con stato 'waiting'
     return {'status': 'waiting'}
 
-@app.route('/prova_Loading')
-def prova_Loading():
-    return render_template('provaLoadingPage.html')
 
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')

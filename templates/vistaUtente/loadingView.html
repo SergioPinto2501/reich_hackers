@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="/static/images/icon/favicon.png">
+    <link rel="shortcut icon" href="/images/icon/favicon.png">
     <link rel="stylesheet" href="/static/css/loading_page.css">
     <title>Reich Hacker Matchmaking</title>
 
@@ -11,14 +11,19 @@
 <body>
     <canvas id="network-background"></canvas>
     <div class="container">
-        <h1>Cyber Wargame Matchmaking</h1>
+        <h1>Reich Hackers Matchmaking</h1>
+        <div class="vs">
+            <img class="allies" src="static/images/factions/allies.png" alt="Reich Hackers Matchmaking">
+            <h2>vs</h2>
+            <img class="axies" src="static/images/factions/axis.png" alt="Reich Hackers Matchmaking">
+        </div>
         <div class="progress-container">
             <div class="progress-bar"></div>
             <div class="progress-text">0%</div>
         </div>
         <p class="status">Inizializzazione sistemi...</p>
     </div>
-
+    <div class="start-game" id="start-game"></div>
     <script src="/static/js/loading_page_script.js"></script>
 </body>
 </html>
