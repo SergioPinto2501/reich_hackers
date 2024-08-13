@@ -4,16 +4,29 @@ class Player:
     username = None
     faction = None
     network = None
+    ByteCoin = 0
     def __init__(self, username, faction):
         self.username = username
         self.faction = faction
         self.network = NetworkModel()
+        self.ByteCoin = 100
+
+    @classmethod
+    def recoveredPlayer(self, username, faction, ByteCoin, network):
+        self.username = username
+        self.faction = faction
+        self.ByteCoin = ByteCoin
+        self.network = network
+        return self
 
     def toString(self):
         return self.username + " " + self.faction
 
     def getUsername(self):
         return self.username
+
+    def getByteCoin(self):
+        return self.ByteCoin
 
     def getFaction(self):
         return self.faction
@@ -28,8 +41,8 @@ class Player:
             print("OS: ",node.os)
             print("Servizi: ",node.services)
 
-
-
+    def toString(self):
+        return self.username + " " + self.faction + " " + str(self.ByteCoin) + " " + self.getNetworkString()
 class User:
     def __init__(self, username, email, name, surname):
         self.username = username

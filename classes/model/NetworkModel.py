@@ -8,6 +8,14 @@ class NetworkModel:
     def __init__(self):
         self.nodes = self.generate_nodes()
 
+    @classmethod
+    def recoverNodes(self, network):
+        for node in network:
+            node = NetworkNode.recover_node(node.get("name"), node.get("ip"), node.get("type"), node.get("os"), node.get("open_ports"), node.get("services"))
+            self.nodes.append(node)
+
+        return self.nodes
+
     def generate_nodes(self) -> List[NetworkNode]:
         nodes = []
         used_names = set()

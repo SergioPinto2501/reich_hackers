@@ -18,6 +18,17 @@ class NetworkNode:
             self.data = self.generate_database_data()
             self.db_engine = random.choice(["MySQL", "PostgreSQL", "SQLite", "MongoDB"])
 
+    @classmethod
+    def recover_node(cls, name, ip, type, os, open_ports, services):
+        node = cls.__new__(cls)  # Create a new instance without calling __init__
+        node.name = name
+        node.ip = ip
+        node.type = type
+        node.os = os
+        node.open_ports = open_ports
+        node.services = services
+        return node
+
     def generate_name(self) -> str:
         prefix = random.choice(["SRV", "NODE", "HOST", "DEVICE"])
         suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
@@ -32,7 +43,6 @@ class NetworkNode:
 
 
     def generate_open_ports(self) -> List[int]:
-
         casual_db_port = [3306, 5432, 8080, 27017]
         casual_port = [21, 22, 25, 53, 80, 443]
         port_to_add = 0
@@ -116,7 +126,6 @@ class NetworkNode:
         for port in self.open_ports:
             match vulnerabile_index:
                 case 0:
-
                     service = random.choice(not_vulnerabile_services[port])
                 case 1:
                     if(port == 21):
@@ -199,3 +208,13 @@ class NetworkNode:
                 node_info += f"  - {item['type']}: {item['value']}\n"
 
         return node_info
+    def to_dict(self):
+        node_dict = {
+            'name': self.name,
+            'ip': self.ip,
+            'type': self.type,
+            'os': self.os,
+            'open_ports': self.open_ports,
+            'services': self.services
+        }
+        return node_dict
