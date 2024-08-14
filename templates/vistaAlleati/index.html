@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="/images/icon/favicon.png">
+    <link rel="shortcut icon" href="static/images/icon/favicon.png">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
@@ -14,8 +14,7 @@
         html, body {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: black;
+            font-family: 'IBM Plex Mono', monospace;
             color: #8892b0;
             overflow: hidden;
             height: 100%;
@@ -68,6 +67,7 @@
             transform: scale(1.1);
         }
         .info-panel {
+            display: none;
             position: absolute;
             top: 70px;
             right: 10px;
@@ -79,50 +79,95 @@
             z-index: 1000;
             border: 1px solid black;
         }
+        .player-resource {
+            width: 10%;
+            margin-right: 20px;
+            float: right;
+            background: black;
+            border: white 1px solid;
+            border-radius: 5px;
+            text-align: center;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Optional: Adjust the gap as needed */
+
+        }
+        .player-resource p {
+            color: white;
+            font-size: 20px;
+            margin: 0;
+
+            padding: 10px;
+        }
+        .player-resource img {
+            width: 40px;
+            height: 40px;
+            display: block;
+            margin-left: 0px;
+        }
+        .message-for-player {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: black 2px solid;
+            background: gray;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
-<canvas id="network-background"></canvas>
+<canvas id="network-background" style="position: absolute; top: 0; left: 0; z-index: -1;"></canvas>
 <nav class="navbar navbar-expand-lg navbar-dark">
-  <a class="navbar-brand" href="/">Reich Hackers</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      {% if 'user' in session %}
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-         Fazione {{ player.faction }}, di {{ player.username }}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Il mio Profilo</a>
-          <a class="dropdown-item" href="#">Abbandona</a>
-        </div>
-        <div class="resource-of-player" aria-labelledby="navbarDropdown">
-            <p class="dropdown-item">Risorse: {{ player.ByteCoin }}</p>
-        <div>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
+    <a class="navbar-brand" href="/">Reich Hackers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            {% if 'user' in session %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Fazione {{ player.faction }}, di {{ player.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Il mio Profilo</a>
+                        <a class="dropdown-item" href="#">Abbandona</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>
+<button class="player-resource" onclick="explainByteCoin()">
+    <p> {{player.ByteCoin }}</p><img src="/static/images/resource/ByteCoin.png">
+</button>
 
 <div class="content">
     <div id="map"></div>
     <div class="info-panel" id="info">
+        <button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
         <h2>Informazioni Nodo</h2>
         <p>Clicca su un nodo per visualizzare le informazioni.</p>
     </div>
 </div>
 
 <div id="footer" class="footer">
-        <i class="fas fa-desktop icon" onclick="alert('Opening virtual desktop...')"></i>
-        <i class="fas fa-network-wired icon" onclick="alert('Network status...')"></i>
-        <i class="fas fa-shield-alt icon" onclick="alert('Defense systems...')"></i>
-        <i class="fas fa-virus icon" onclick="alert('Malware toolkit...')"></i>
+    <i class="fas fa-desktop icon" onclick="alert('Opening virtual desktop...')"></i>
+    <i class="fas fa-network-wired icon" onclick="alert('Network status...')"></i>
+    <i class="fas fa-shield-alt icon" onclick="alert('Defense systems...')"></i>
+    <i class="fas fa-virus icon" onclick="alert('Malware toolkit...')"></i>
 </div>
+<div id="message-for-player" class="message-for-player">
 
+</div>
 <script src="/static/js/canvas_background.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
@@ -130,7 +175,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+
 <script>
+    const network = {{ network|tojson }};
+    console.log(network);
     var map = L.map('map', {
         zoomControl: true,
         attributionControl: false,
@@ -154,29 +202,67 @@
         maxZoom: 19
     }).addTo(map);
 
-    // Example nodes
-    const nodes = [
-        {lat: 40.7128, lon: -74.0060, name: "New York Node", info: "Principale hub di comunicazione per il Nord America"},
-        {lat: 51.5074, lon: -0.1278, name: "London Node", info: "Centro di controllo europeo"},
-        {lat: 35.6762, lon: 139.6503, name: "Tokyo Node", info: "Nodo di sicurezza per l'Asia orientale"},
-        {lat: -33.8688, lon: 151.2093, name: "Sydney Node", info: "Punto di accesso per l'Oceania"},
-        {lat: -1.2921, lon: 36.8219, name: "Nairobi Node", info: "Hub di comunicazione per l'Africa orientale"}
-    ];
-
     const info = document.getElementById('info');
-
-    nodes.forEach(node => {
-        L.circleMarker([node.lat, node.lon], {
-            radius: 6,
-            fillColor: "#3b82f6",
-            color: "#fff",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-        }).addTo(map).on('click', () => {
-            info.innerHTML = `<h2>${node.name}</h2><p>${node.info}</p>`;
-        });
+    const customIcon = L.icon({
+        iconUrl: '/static/images/icon/pc_icon.png', // Replace with the path to your round PC icon image
+        iconSize: [36, 36], // Adjust the size as needed
+        iconAnchor: [16, 16], // Adjust the anchor point as needed
+        popupAnchor: [0, -16] // Adjust the popup anchor point as needed
     });
+    // Add nodes to the map
+    network.forEach(node => {
+    L.marker([node.lat, node.lon], { icon: customIcon })
+        .addTo(map).on('click', () => {
+        info.style.display = 'block';
+        info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
+                        <h2>${node.name}</h2>
+                        <p>${node.ip}</p>
+                        <p>${node.os}</p>
+                        <p>${node.services}</p>
+                        <p>${node.type}</p>`;
+    });
+});
+    const polylineOptions = {
+        color: 'grey',
+        dashArray: '5, 10',
+        dashOffset: '0'
+    };
+
+    const animatePolyline = (polyline) => {
+        let offset = 0;
+        setInterval(() => {
+            offset = (offset + 1) % 15; // Adjust the modulus value based on dashArray
+            polyline.setStyle({ dashOffset: `${offset}` });
+        }, 100); // Adjust the interval for speed
+    };
+
+    // Connect nodes with lines
+    for (let i = 0; i < network.length - 1; i++) {
+        const latlngs = [
+            [network[i].lat, network[i].lon],
+            [network[i + 1].lat, network[i + 1].lon]
+        ];
+        const polyline = L.polyline(latlngs, polylineOptions).addTo(map);
+        animatePolyline(polyline);
+    }
+</script>
+
+<script>
+    function explainByteCoin() {
+        div = document.getElementById('message-for-player');
+        button = document.createElement('button');
+        button.innerHTML = 'Chiudi';
+        button.onclick = function() {
+            div.style.display = 'none';
+        };
+        div.innerHTML = "<h2>ByteCoin</h2><p>ByteCoin è la valuta virtuale utilizzata per acquistare risorse e servizi all'interno del gioco.</p>";
+        div.appendChild(button);
+        div.style.display = 'block';
+    }
+    function closeInfoNodo() {
+        div = document.getElementById('info');
+        div.style.display = 'none';
+    }
 </script>
 </body>
 </html>

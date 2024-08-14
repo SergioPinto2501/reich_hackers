@@ -8,11 +8,11 @@ class Player:
     def __init__(self, username, faction):
         self.username = username
         self.faction = faction
-        self.network = NetworkModel()
+        self.network = NetworkModel(self.faction)
         self.ByteCoin = 100
 
     @classmethod
-    def recoveredPlayer(self, username, faction, ByteCoin, network):
+    def recoveredPlayer(self, username, faction, ByteCoin, network) -> 'Player':
         self.username = username
         self.faction = faction
         self.ByteCoin = ByteCoin

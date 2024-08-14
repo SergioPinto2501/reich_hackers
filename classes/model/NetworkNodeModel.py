@@ -6,9 +6,12 @@ from typing import List, Dict, Optional, Any
 
 class NetworkNode:
     vulnerable_random_numer = 0
-    def __init__(self, name, ip, type) -> None:
+    def __init__(self, name, ip, type, lat, lon, city) -> None:
         self.name = name
         self.type = type
+        self.lat = lat
+        self.lon = lon
+        self.city = city
         self.os = self.generate_os()
         self.ip = ip
         self.open_ports = self.generate_open_ports()
@@ -19,7 +22,7 @@ class NetworkNode:
             self.db_engine = random.choice(["MySQL", "PostgreSQL", "SQLite", "MongoDB"])
 
     @classmethod
-    def recover_node(cls, name, ip, type, os, open_ports, services):
+    def recover_node(cls, name, ip, type, os, open_ports, services, lat, lon, city) -> 'NetworkNode':
         node = cls.__new__(cls)  # Create a new instance without calling __init__
         node.name = name
         node.ip = ip
@@ -27,6 +30,9 @@ class NetworkNode:
         node.os = os
         node.open_ports = open_ports
         node.services = services
+        node.lat = lat
+        node.lon = lon
+        node.city = city
         return node
 
     def generate_name(self) -> str:
@@ -197,7 +203,7 @@ class NetworkNode:
         node_info += f"Type: {self.type}\n"
         node_info += f"OS: {self.os}\n"
         node_info += f"IP: {self.ip}\n"
-
+        node_info += f"Location: {self.city} ({self.lat}, {self.lon})\n"
         node_info += f"Open Ports: {', '.join(map(str, self.open_ports))}\n"
         node_info += f"Services: {', '.join([f'{port}: {service}' for port, service in self.services.items()])}\n"
 
@@ -215,6 +221,10 @@ class NetworkNode:
             'type': self.type,
             'os': self.os,
             'open_ports': self.open_ports,
-            'services': self.services
+            'services': self.services,
+            'lat': self.lat,
+            'lon': self.lon,
+            'city': self.city
+
         }
         return node_dict

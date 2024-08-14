@@ -36,7 +36,11 @@ def homepage_game_allies():
     return render_template('vistaAlleati/index.html',player=player, network=network_dicts)
 @app.route('/homepage_game_axis')
 def homepage_game_axis():
-    return render_template('vistaAsse/index.html')
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    network_dicts = [node.to_dict() for node in player.network]
+    return render_template('vistaAsse/index.html',player=player, network=network_dicts)
 
 # This following routes are for the controllers
 @app.route('/registrationController', methods=['POST'])

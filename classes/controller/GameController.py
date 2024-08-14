@@ -126,7 +126,10 @@ class GameController(DatabaseController):
                 "type": str(node.type),
                 "os": str(node.os),
                 "open_ports": str(node.open_ports),
-                "services": str(node.services)
+                "services": str(node.services),
+                "lat": str(node.lat),
+                "lon": str(node.lon),
+                "city": str(node.city)
             })
 
         doc_ref = self.database.collection("games").document(str(gameId)).update({
@@ -155,24 +158,18 @@ class GameController(DatabaseController):
         return game.to_dict()
 
     def getPlayerFromGame(self, gameId, user):
-        playerFromDB = self.database.collection("games").document(str(gameId)).collection("players").document(
-            "player1").get()
+        playerFromDB = self.database.collection("games").document(str(gameId)).collection("players").document("player1").get()
         if (playerFromDB.get("username") == user.getUsername()):
             playerToReturn = playerFromDB
-            network = self.database.collection("games").document(str(gameId)).collection("players").document(
-                "player1").collection("network").get()
-            playerNetwork = NetworkModel().recoverNodes(network)
+            network = self.database.collection("games").document(str(gameId)).collection("players").document("player1").collection("network").get()
+            playerNetwork = NetworkModel.recoverNodes(network)
         else:
-            playerFromDB = self.database.collection("games").document(str(gameId)).collection("players").document(
-                "player2").get()
+            playerFromDB = self.database.collection("games").document(str(gameId)).collection("players").document("player2").get()
             if (playerFromDB.get("username") == user.getUsername()):
                 playerToReturn = playerFromDB
-                network = self.database.collection("games").document(str(gameId)).collection("players").document(
-                    "player2").collection("network").get()
+                network = self.database.collection("games").document(str(gameId)).collection("players").document("player2").collection("network").get()
+                playerNetwork = NetworkModel.recoverNodes(network)
 
-                playerNetwork = NetworkModel().recoverNodes(network)
-
-        print(playerToReturn.get("username"), playerToReturn.get("faction"),playerToReturn.get("ByteCoin"), playerNetwork)
         player = Player.recoveredPlayer(playerToReturn.get("username"), playerToReturn.get("faction"),
                                       playerToReturn.get("ByteCoin"), playerNetwork)
         return player
