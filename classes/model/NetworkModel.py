@@ -13,11 +13,9 @@ class NetworkModel:
         "Mosca": (55.7558, 37.6173),
         "Stalingrado (Volgograd)": (48.7080, 44.5133),
         "Algeri": (36.7372, 3.0865),
-        "Roma": (41.9028, 12.4964),
         "Parigi": (48.8566, 2.3522),
         "Lisbona": (38.7223, -9.1399),
         "Bruxelles": (50.8503, 4.3517),
-        "Berlino": (52.5200, 13.4050),
         "Ankara": (39.9334, 32.8597),
         "Atene": (37.9838, 23.7275),
         "Toronto": (43.6510, -79.3470),
@@ -35,21 +33,15 @@ class NetworkModel:
         "Osaka": (34.6937, 135.5023),  # Giappone
         "Milano": (45.4642, 9.1900),  # Italia
         "Napoli": (40.8522, 14.2681),  # Italia
-        "Kyoto": (35.0116, 135.7681),  # Giappone
-        "Hamburg": (53.5511, 9.9937),  # Germania
         "Monaco di Baviera": (48.1351, 11.5820),  # Germania
-        "Firenze": (43.7696, 11.2558),  # Italia
-        "Nagasaki": (32.7503, 129.8777),  # Giappone
-        "Kobe": (34.6901, 135.1955),  # Giappone
         "Dresda": (51.0504, 13.7373),  # Germania
-        "Turin": (45.0703, 7.6869),  # Italia
-        "Sapporo": (43.0621, 141.3544),  # Giappone
         "Colonia": (50.9375, 6.9603),  # Germania
-        "Trieste": (45.6500, 13.7768),  # Italia
-        "Yokohama": (35.4437, 139.6371),  # Giappone
-        "Genoa": (44.4056, 8.9463),  # Italia
-        "Danzica": (54.3520, 18.6466)  # Germania (Danzig durante il periodo della guerra)
+        "Tripoli": (32.8872, 13.1913),  # Libia (colonia italiana)
+        "Addis Abeba": (9.0306, 38.7400),  # Etiopia (occupata dall'Italia)
+        "Asmara": (15.3229, 38.9251),  # Eritrea (colonia italiana)
+        "Nanchino": (32.0603, 118.7969)  # Cina (occupata dal Giappone)
     }
+
 
     def __init__(self, faction):
         self.faction = faction
@@ -77,10 +69,10 @@ class NetworkModel:
         used_ips = set()
         database_count = 0
 
-        for _ in range(20):
+        for _ in range(10):
             name = self.generate_unique_name(used_names)
             ip = self.generate_unique_ip(used_ips)
-            if database_count < 5:
+            if database_count < 3:
                 node_type = "Database"
                 database_count += 1
             else:

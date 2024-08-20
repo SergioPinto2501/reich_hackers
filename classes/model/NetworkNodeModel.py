@@ -35,11 +35,6 @@ class NetworkNode:
         node.city = city
         return node
 
-    def generate_name(self) -> str:
-        prefix = random.choice(["SRV", "NODE", "HOST", "DEVICE"])
-        suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-        return f"{prefix}-{suffix}"
-
     def generate_os(self) -> str:
         if(self.type) == "Database":
             os_list = ["Ubuntu 20.04","Windows Server 2019"]
@@ -49,6 +44,7 @@ class NetworkNode:
 
 
     def generate_open_ports(self) -> List[int]:
+        port = []
         casual_db_port = [3306, 5432, 8080, 27017]
         casual_port = [21, 22, 25, 53, 80, 443]
         port_to_add = 0
@@ -82,18 +78,19 @@ class NetworkNode:
             case _:
                 port_to_add = 0 # Default case, non vulnerabile
 
-        if(self.type) == "Computer":
+        if self.type == "Computer":
             num_open_ports = random.randint(1, 3)
             port = random.sample(casual_port, num_open_ports)
-
-        if(self.type) == "Database":
+        if self.type == "Database":
             num_open_ports = random.randint(1, 3)
             port = random.sample(casual_port, num_open_ports)
             port += random.sample(casual_db_port, 1)
 
         if(port_to_add not in port and port_to_add != 0):
+            if(type == "Database" and port_to_add in casual_db_port):
                 port.remove(port[0])
                 port.append(port_to_add)
+
 
         return port
 
@@ -112,7 +109,6 @@ class NetworkNode:
         }
 
         #Da aggiungere alla documentazione
-
         not_vulnerabile_services = {
             21: ["FTP vsftpd 3.0.3", "FTP vsftpd 3.0.2"],
             22: ["SSH OpenSSH 8.4", "SSH OpenSSH 7.9"],
@@ -205,7 +201,13 @@ class NetworkNode:
         node_info += f"IP: {self.ip}\n"
         node_info += f"Location: {self.city} ({self.lat}, {self.lon})\n"
         node_info += f"Open Ports: {', '.join(map(str, self.open_ports))}\n"
-        node_info += f"Services: {', '.join([f'{port}: {service}' for port, service in self.services.items()])}\n"
+        try:
+            # Code that might raise an exception
+            node_info += f"Services: {', '.join([f'{port}: {service}' for port, service in self.services.items()])}\n"
+        except Exception as e:
+            # Handle the exception
+            node_info += f"Services: {self.services}\n"
+
 
         if self.type == "Database":
             node_info += f"Database Engine: {self.db_engine}\n"
