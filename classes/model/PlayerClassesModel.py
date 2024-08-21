@@ -13,14 +13,12 @@ class Player:
 
     @classmethod
     def recoveredPlayer(self, username, faction, ByteCoin, network) -> 'Player':
+        self = Player.__new__(Player)
         self.username = username
         self.faction = faction
         self.ByteCoin = ByteCoin
         self.network = network
         return self
-
-    def toString(self):
-        return self.username + " " + self.faction
 
     def getUsername(self):
         return self.username

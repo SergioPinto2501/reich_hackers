@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/explain_choiceDB.css') }}">
-    <title>Potenze dell'Asse: Scelta database</title>
-
+    <title>Alleati: World War II</title>
 </head>
 <body>
 <canvas id="network-background" style="position: absolute; top: 0; left: 0; z-index: -1;"></canvas>
@@ -39,9 +37,6 @@
 <button class="player-resource" onclick="explainByteCoin()">
     <p> {{player.ByteCoin }}</p><img src="/static/images/resource/ByteCoin.png">
 </button>
-<div class ="title">
-    <h2> {{ player.username }} prima di inizare scegli il tuo main dabatase</h2>
-</div>
 <div class="content">
     <div id="map"></div>
     <div class="info-panel" id="info">
@@ -50,19 +45,16 @@
         <p>Clicca su un nodo per visualizzare le informazioni.</p>
     </div>
 </div>
-<!--
 <div id="footer" class="footer">
-    <i class="fas fa-desktop icon" onclick=showChoiceDB()></i>
+    <i id class="fas fa-desktop icon" onclick=showChoiceDB()></i>
     <i class="fas fa-network-wired icon" onclick=showChoiceDB()></i>
     <i class="fas fa-shield-alt icon" onclick=showChoiceDB()></i>
     <i class="fas fa-virus icon" onclick=showChoiceDB()></i>
 </div>
--->
 <div id="message-for-player" class="message-for-player">
-    <h2>Seleziona il tuo database principale</h2>
-    <p>Scegli con attenzione il database che desideri utilizzare come principale. Questo sarà il cuore della tua strategia e dovrà essere protetto a tutti i costi per evitare che l'avversario lo conquisti. Per selezionarlo, basta cliccare su un database e scegliere l'opzione 'Rendi principale'.</p>
-    <button onclick=closeChoiceDB()>Capito</button>
+
 </div>
+
 <script src="/static/js/canvas_background.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
@@ -71,7 +63,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 <script src="https://unpkg.com/leaflet-geodesic@2.0.0/leaflet.geodesic.js"></script>
-
 <script>
     const network = {{ network|tojson }};
     var map = L.map('map', {
@@ -103,7 +94,7 @@
         popupAnchor: [0, -16]
     });
     const customIconDatabase = L.icon({
-        iconUrl: '/static/images/icon/database_icon_axies.png',
+        iconUrl: '/static/images/icon/database_icon_allies.png',
         iconSize: [36, 20],
         iconAnchor: [16, 16],
         popupAnchor: [0, -16]
@@ -186,7 +177,7 @@
 
     // Options for the polyline
     const polylineOptions = {
-        color: '#ff0000',
+        color: '#58c6f5',
         weight: 1,
         opacity: 0.6,
         dashArray: '5, 10',
@@ -230,51 +221,6 @@
     function closeInfoNodo() {
         div = document.getElementById('info');
         div.style.display = 'none';
-    }
-    function closeChoiceDB() {
-        div = document.getElementById('message-for-player');
-        div.style.display = 'none';
-    }
-    function showChoiceDB() {
-        div = document.getElementById('message-for-player');
-         button = document.createElement('button');
-        button.innerHTML = 'Capito';
-        button.onclick = function() {
-            div.style.display = 'none';
-        };
-        div.innerHTML = " <h2>Prima di continuare seleziona il tuo database principale</h2><p>Scegli con attenzione il database che desideri utilizzare come principale. Questo sarà il cuore della tua strategia e dovrà essere protetto a tutti i costi per evitare che l'avversario lo conquisti. Per selezionarlo, basta cliccare su un database e scegliere l'opzione 'Rendi principale'.</p>";
-        div.appendChild(button);
-        div.style.display = 'block';
-    }
-    function selectedDB() {
-        div = document.getElementById('message-for-player');
-        button = document.createElement('button');
-        button.innerHTML = 'Continua';
-        button.onclick = function() {
-            div.style.display = 'none';
-            window.location.href = '/game_asse';
-        };
-        div.innerHTML = "<h2>Database selezionato</h2><p>Il tuo database principale è stato selezionato con successo. Clicca su 'Continua' per iniziare il gioco.</p>";
-
-        div.appendChild(button);
-        div.style.display = 'block';
-
-    }
-
-    function setDatabase(nodeName) {
-        fetch(`/set_database/${nodeName}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Database set successfully for node:', nodeName);
-                    selectedDB();
-                } else {
-                    console.error('Failed to set database for node:', nodeName);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
     }
 </script>
 </body>

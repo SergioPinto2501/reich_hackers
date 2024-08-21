@@ -49,14 +49,14 @@ class NetworkModel:
 
 
     @classmethod
-    def recoverNodes(cls, network) -> List[NetworkNode]:
-        nodes = cls.__new__(cls)
-        nodes = []
+    def recoverNodes(self, network) -> List[NetworkNode]:
+        self = NetworkModel.__new__(NetworkModel)
+        self.nodes = []
         for node in network:
             node = NetworkNode.recover_node(node.get("name"), node.get("ip"), node.get("type"), node.get("os"), node.get("open_ports"), node.get("services"), node.get("lat"), node.get("lon"), node.get("city"))
-            nodes.append(node)
+            self.nodes.append(node)
 
-        return nodes
+        return self
 
     def generate_nodes(self) -> List[NetworkNode]:
         if(self.faction == "Alleati"):
@@ -100,7 +100,11 @@ class NetworkModel:
 
     def generate_unique_ip(self, used_ips: set) -> str:
         while True:
-            ip = f"192.168.1.{random.randint(1, 254)}"
+            if(self.faction == "Alleati"):
+                ip = f"192.168.4.{random.randint(1, 254)}"
+            else:
+                ip = f"192.168.3.{random.randint(1, 254)}"
+
             if ip not in used_ips:
                 used_ips.add(ip)
                 return ip

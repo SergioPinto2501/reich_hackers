@@ -32,15 +32,17 @@ def homepage_game_allies():
     game_id = session.get('game_id')
     user = User(session['user']['username'], session['user']['email'], session['user']['name'], session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
-    network_dicts = [node.to_dict() for node in player.network]
+    network_dicts = [node.to_dict() for node in  player.getNetwork().get_nodes()]
+
     return render_template('vistaAlleati/index.html',player=player, network=network_dicts)
 @app.route('/homepage_game_axis')
 def homepage_game_axis():
     game_id = session.get('game_id')
     user = User(session['user']['username'], session['user']['email'], session['user']['name'],session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
-    network_dicts = [node.to_dict() for node in player.network]
+    network_dicts = [node.to_dict() for node in  player.getNetwork().get_nodes()]
     return render_template('vistaAsse/index.html',player=player, network=network_dicts)
+
 
 # This following routes are for the controllers
 @app.route('/registrationController', methods=['POST'])
@@ -131,6 +133,41 @@ def check_game_status():
     # Se l'ID del gioco non esiste o il documento non esiste, restituisce una risposta JSON con stato 'waiting'
     return {'status': 'waiting'}
 
+@app.route('/set_database/<node_name>')
+def set_database(node_name):
+    print(node_name)
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+
+    result = GameController().set_database(game_id, player, node_name)
+    print("Esito:" , result)
+    if(result):
+        return {'status': 'success'}
+    else:
+        return {'status': 'error'}
+
+@app.route('/game_asse')
+def game_asse():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    opponent = GameController().getOpponent(game_id, player)
+    print("Giocatore: ", player.toString())
+    print("Avversario: ", opponent.toString())
+    network_dicts = [node.to_dict() for node in player.network]
+    return render_template('vistaAsse/game.html',player=player, network=network_dicts)
+@app.route('/game_alleati')
+def game_alleati():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    opponent = GameController().getOpponent(game_id, player)
+    network_dicts = [node.to_dict() for node in player.getNetwork().get_nodes()]
+    
+    return render_template('vistaAlleati/game.html',player=player, network=network_dicts)
 
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')

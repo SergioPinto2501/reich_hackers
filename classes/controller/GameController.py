@@ -172,4 +172,40 @@ class GameController(DatabaseController):
 
         player = Player.recoveredPlayer(playerToReturn.get("username"), playerToReturn.get("faction"),
                                       playerToReturn.get("ByteCoin"), playerNetwork)
+
+
         return player
+
+    def getOpponent(self, gameId, player):
+        if (self.database.collection("games").document(str(gameId)).collection("players").document(
+                "player1").get().get("username") == player.getUsername()):
+            playerType = 2
+        else:
+            playerType = 1
+        playerFromDB = self.database.collection("games").document(str(gameId)).collection("players").document(
+            "player" + str(playerType)).get()
+        network = self.database.collection("games").document(str(gameId)).collection("players").document(
+            "player" + str(playerType)).collection("network").get()
+        playerNetwork = NetworkModel.recoverNodes(network)
+        print("Nome avversario: ",playerFromDB.get("username"))
+        player = Player.recoveredPlayer(playerFromDB.get("username"), playerFromDB.get("faction"),
+                                      playerFromDB.get("ByteCoin"), playerNetwork)
+        print(player.getUsername())
+        print(player.getFaction())
+        print(player.getByteCoin())
+        print(player.getNetworkString())
+
+        return player
+
+    def set_database(self, game_id, player, node_name):
+
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+
+        doc_ref = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("network").document(node_name).update({
+            "main": True
+        })
+        print("Node " + node_name + " set as main")
+        return True

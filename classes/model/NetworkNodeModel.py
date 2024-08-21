@@ -22,18 +22,18 @@ class NetworkNode:
             self.db_engine = random.choice(["MySQL", "PostgreSQL", "SQLite", "MongoDB"])
 
     @classmethod
-    def recover_node(cls, name, ip, type, os, open_ports, services, lat, lon, city) -> 'NetworkNode':
-        node = cls.__new__(cls)  # Create a new instance without calling __init__
-        node.name = name
-        node.ip = ip
-        node.type = type
-        node.os = os
-        node.open_ports = open_ports
-        node.services = services
-        node.lat = lat
-        node.lon = lon
-        node.city = city
-        return node
+    def recover_node(self, name, ip, type, os, open_ports, services, lat, lon, city) -> 'NetworkNode':
+        self = NetworkNode.__new__(NetworkNode) # Create a new instance without calling __init__
+        self.name = name
+        self.ip = ip
+        self.type = type
+        self.os = os
+        self.open_ports = open_ports
+        self.services = services
+        self.lat = lat
+        self.lon = lon
+        self.city = city
+        return self
 
     def generate_os(self) -> str:
         if(self.type) == "Database":
@@ -194,28 +194,9 @@ class NetworkNode:
         initial_byte = '192.168.1'
         last_byte = random.randint(1, 254)
         return initial_byte + '.' + str(last_byte)
-    def __str__(self) -> str:
-        node_info = f"Name: {self.name}\n"
-        node_info += f"Type: {self.type}\n"
-        node_info += f"OS: {self.os}\n"
-        node_info += f"IP: {self.ip}\n"
-        node_info += f"Location: {self.city} ({self.lat}, {self.lon})\n"
-        node_info += f"Open Ports: {', '.join(map(str, self.open_ports))}\n"
-        try:
-            # Code that might raise an exception
-            node_info += f"Services: {', '.join([f'{port}: {service}' for port, service in self.services.items()])}\n"
-        except Exception as e:
-            # Handle the exception
-            node_info += f"Services: {self.services}\n"
 
-
-        if self.type == "Database":
-            node_info += f"Database Engine: {self.db_engine}\n"
-            node_info += "Database Data:\n"
-            for item in self.data:
-                node_info += f"  - {item['type']}: {item['value']}\n"
-
-        return node_info
+    def toString(self):
+        return self.name + " " + self.ip + " " + self.type + " " + self.os + " " + str(self.open_ports) + " " + str(self.services) + " " + str(self.lat) + " " + str(self.lon) + " " + self.city
     def to_dict(self):
         node_dict = {
             'name': self.name,

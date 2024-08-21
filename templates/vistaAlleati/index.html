@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/explain_choiceDB.css') }}">
-    <title>Alleati: World War II</title>
+    <title>Alleati: Scelta database</title>
 </head>
 <body>
 <canvas id="network-background" style="position: absolute; top: 0; left: 0; z-index: -1;"></canvas>
@@ -50,12 +50,6 @@
     </div>
 </div>
 
-<div id="footer" class="footer">
-    <i class="fas fa-desktop icon" onclick=showChoiceDB()></i>
-    <i class="fas fa-network-wired icon" onclick=showChoiceDB()></i>
-    <i class="fas fa-shield-alt icon" onclick=showChoiceDB()></i>
-    <i class="fas fa-virus icon" onclick=showChoiceDB()></i>
-</div>
 <div id="message-for-player" class="message-for-player">
     <h2>Seleziona il tuo database principale</h2>
     <p>Scegli con attenzione il database che desideri utilizzare come principale. Questo sarà il cuore della tua strategia e dovrà essere protetto a tutti i costi per evitare che l'avversario lo conquisti. Per selezionarlo, basta cliccare su un database e scegliere l'opzione 'Rendi principale'.</p>
@@ -72,7 +66,6 @@
 <script src="https://unpkg.com/leaflet-geodesic@2.0.0/leaflet.geodesic.js"></script>
 <script>
     const network = {{ network|tojson }};
-
     var map = L.map('map', {
         zoomControl: true,
         attributionControl: false,
@@ -110,27 +103,47 @@
 
     // Add nodes to the map
     network.forEach(node => {
+        // Parse the services string into an object
+        let services = {};
+            if (node.services.startsWith('{') && node.services.endsWith('}')) {
+                const pairs = node.services.slice(1, -1).split(', ');
+                for (const pair of pairs) {
+                    const [key, value] = pair.split(': ');
+                    services[parseInt(key)] = value.slice(1, -1); // Rimuovi le virgolette
+                }
+            }
+        // Convert the services object into a string
+        let porte = '';
+        let servizi = '';
+        Object.entries(services).forEach(([port, service]) => {
+            porte += port + ', ';
+            servizi += service + ',<br>';
+        });
+        porte = porte.slice(0, -2);
+        servizi = servizi.slice(0, -5);
+
         if(node.type == "Database") {
             L.marker([node.lat, node.lon], { icon: customIconDatabase })
             .addTo(map).on('click', () => {
             info.style.display = 'block';
             info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
-                    <h2>${node.name}</h2>
-                    <p>${node.ip}</p>
-                    <p>${node.os}</p>
-                    <p>${node.services}</p>
-                    <p>${node.type}</p>`;
+                    <h2><strong>${node.name}</strong></h2>
+                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
+                    <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
+                    <p><strong>Porte aperte: </strong><br>${porte}</p>
+                    <p><strong>Servizi:</strong><br> ${servizi}</p>
+                    <button onclick="setDatabase('${node.name}')"> Rendi principale</button>`;
             });
         }else if(node.type == "Computer") {
             L.marker([node.lat, node.lon], { icon: customIconComputer })
             .addTo(map).on('click', () => {
             info.style.display = 'block';
             info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
-                    <h2>${node.name}</h2>
-                    <p>${node.ip}</p>
-                    <p>${node.os}</p>
-                    <p>${node.services}</p>
-                    <p>${node.type}</p>`;
+                    <h2><strong>${node.name}</strong></h2>
+                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
+                    <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
+                    <p><strong>Porte aperte: </strong><br>${porte}</p>
+                    <p><strong>Servizi:</strong><br> ${servizi}</p>`;
             });
         }
 
@@ -221,10 +234,40 @@
         button.onclick = function() {
             div.style.display = 'none';
         };
-        div.innerHTML = " <h2>Seleziona il tuo database principale</h2><p>Scegli con attenzione il database che desideri utilizzare come principale. Questo sarà il cuore della tua strategia e dovrà essere protetto a tutti i costi per evitare che l'avversario lo conquisti. Per selezionarlo, basta cliccare su un database e scegliere l'opzione 'Rendi principale'.</p>";
+        div.innerHTML = " <h2>Prima di continuare seleziona il tuo database principale</h2><p>Scegli con attenzione il database che desideri utilizzare come principale. Questo sarà il cuore della tua strategia e dovrà essere protetto a tutti i costi per evitare che l'avversario lo conquisti. Per selezionarlo, basta cliccare su un database e scegliere l'opzione 'Rendi principale'.</p>";
         div.appendChild(button);
         div.style.display = 'block';
         div.style.display = 'block';
+    }
+    function selectedDB() {
+        div = document.getElementById('message-for-player');
+        button = document.createElement('button');
+        button.innerHTML = 'Continua';
+        button.onclick = function() {
+            div.style.display = 'none';
+            window.location.href = '/game_alleati';
+        };
+        div.innerHTML = "<h2>Database selezionato</h2><p>Il tuo database principale è stato selezionato con successo. Clicca su 'Continua' per iniziare il gioco.</p>";
+
+        div.appendChild(button);
+        div.style.display = 'block';
+
+    }
+
+    function setDatabase(nodeName) {
+       fetch(`/set_database/${nodeName}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('Database set successfully for node:', nodeName);
+                selectedDB();
+            } else {
+                console.error('Failed to set database for node:', nodeName);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 </script>
 </body>
