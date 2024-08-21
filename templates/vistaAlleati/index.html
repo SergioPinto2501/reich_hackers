@@ -42,7 +42,7 @@
     <h2> {{ player.username }} prima di inizare scegli il tuo main dabatase</h2>
 </div>
 <div class="content">
-    <div id="map"></div>
+    <div id="map_player"></div>
     <div class="info-panel" id="info">
         <button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
         <h2>Informazioni Nodo</h2>
@@ -65,46 +65,52 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 <script src="https://unpkg.com/leaflet-geodesic@2.0.0/leaflet.geodesic.js"></script>
 <script>
-    const network = {{ network|tojson }};
-    var map = L.map('map', {
-        zoomControl: true,
-        attributionControl: false,
-        minZoom: 2,
-        maxZoom: 6,
-        dragging: true
-    }).setView([20, 0], 2);
+    window.onload = function() {
+        showMapOfPlayer();
+    };
+    function showMapOfPlayer() {
+        div = document.getElementById('map_player');
+        div.style.display = 'block';
+        const network = {{ network|tojson }};
+        var map = L.map('map_player', {
+            zoomControl: true,
+            attributionControl: false,
+            minZoom: 2,
+            maxZoom: 6,
+            dragging: true
+        }).setView([20, 0], 2);
 
-    var southWest = L.latLng(-90, -180);
-    var northEast = L.latLng(90, 180);
-    var bounds = L.latLngBounds(southWest, northEast);
+        var southWest = L.latLng(-90, -180);
+        var northEast = L.latLng(90, 180);
+        var bounds = L.latLngBounds(southWest, northEast);
 
-    map.setMaxBounds(bounds);
-    map.on('drag', function() {
-        map.panInsideBounds(bounds, { animate: false });
-    });
+        map.setMaxBounds(bounds);
+        map.on('drag', function () {
+            map.panInsideBounds(bounds, {animate: false});
+        });
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19
-    }).addTo(map);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19
+        }).addTo(map);
 
-    const info = document.getElementById('info');
-    const customIconComputer = L.icon({
-        iconUrl: '/static/images/icon/pc_icon.png',
-        iconSize: [36, 36],
-        iconAnchor: [16, 16],
-        popupAnchor: [0, -16]
-    });
-    const customIconDatabase = L.icon({
-        iconUrl: '/static/images/icon/database_icon_allies.png',
-        iconSize: [36, 20],
-        iconAnchor: [16, 16],
-        popupAnchor: [0, -16]
-    });
+        const info = document.getElementById('info');
+        const customIconComputer = L.icon({
+            iconUrl: '/static/images/icon/pc_icon.png',
+            iconSize: [36, 36],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, -16]
+        });
+        const customIconDatabase = L.icon({
+            iconUrl: '/static/images/icon/database_icon_allies.png',
+            iconSize: [36, 20],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, -16]
+        });
 
-    // Add nodes to the map
-    network.forEach(node => {
-        // Parse the services string into an object
-        let services = {};
+        // Add nodes to the map
+        network.forEach(node => {
+            // Parse the services string into an object
+            let services = {};
             if (node.services.startsWith('{') && node.services.endsWith('}')) {
                 const pairs = node.services.slice(1, -1).split(', ');
                 for (const pair of pairs) {
@@ -112,101 +118,102 @@
                     services[parseInt(key)] = value.slice(1, -1); // Rimuovi le virgolette
                 }
             }
-        // Convert the services object into a string
-        let porte = '';
-        let servizi = '';
-        Object.entries(services).forEach(([port, service]) => {
-            porte += port + ', ';
-            servizi += service + ',<br>';
-        });
-        porte = porte.slice(0, -2);
-        servizi = servizi.slice(0, -5);
+            // Convert the services object into a string
+            let porte = '';
+            let servizi = '';
+            Object.entries(services).forEach(([port, service]) => {
+                porte += port + ', ';
+                servizi += service + ',<br>';
+            });
+            porte = porte.slice(0, -2);
+            servizi = servizi.slice(0, -5);
 
-        if(node.type == "Database") {
-            L.marker([node.lat, node.lon], { icon: customIconDatabase })
-            .addTo(map).on('click', () => {
-            info.style.display = 'block';
-            info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
+            if (node.type == "Database") {
+                L.marker([node.lat, node.lon], {icon: customIconDatabase})
+                    .addTo(map).on('click', () => {
+                    info.style.display = 'block';
+                    info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                     <h2><strong>${node.name}</strong></h2>
                     <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
                     <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
                     <p><strong>Porte aperte: </strong><br>${porte}</p>
                     <p><strong>Servizi:</strong><br> ${servizi}</p>
                     <button onclick="setDatabase('${node.name}')"> Rendi principale</button>`;
-            });
-        }else if(node.type == "Computer") {
-            L.marker([node.lat, node.lon], { icon: customIconComputer })
-            .addTo(map).on('click', () => {
-            info.style.display = 'block';
-            info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
+                });
+            } else if (node.type == "Computer") {
+                L.marker([node.lat, node.lon], {icon: customIconComputer})
+                    .addTo(map).on('click', () => {
+                    info.style.display = 'block';
+                    info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                     <h2><strong>${node.name}</strong></h2>
                     <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
                     <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
                     <p><strong>Porte aperte: </strong><br>${porte}</p>
                     <p><strong>Servizi:</strong><br> ${servizi}</p>`;
-            });
-        }
+                });
+            }
 
-    });
-    // Existing code for map initialization remains the same
+        });
+        // Existing code for map initialization remains the same
 // The following code is added to the end of the file
 
-    // Function to calculate intermediate points on a great circle
-    function intermediatePoints(start, end, numPoints) {
-        const lat1 = start.lat * Math.PI / 180;
-        const lon1 = start.lon * Math.PI / 180;
-        const lat2 = end.lat * Math.PI / 180;
-        const lon2 = end.lon * Math.PI / 180;
+        // Function to calculate intermediate points on a great circle
+        function intermediatePoints(start, end, numPoints) {
+            const lat1 = start.lat * Math.PI / 180;
+            const lon1 = start.lon * Math.PI / 180;
+            const lat2 = end.lat * Math.PI / 180;
+            const lon2 = end.lon * Math.PI / 180;
 
-        const d = 2 * Math.asin(Math.sqrt(Math.pow((Math.sin((lat1 - lat2) / 2)), 2) +
-            Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
+            const d = 2 * Math.asin(Math.sqrt(Math.pow((Math.sin((lat1 - lat2) / 2)), 2) +
+                Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
 
-        const points = [];
-        for (let i = 0; i <= numPoints; i++) {
-            const f = i / numPoints;
-            const A = Math.sin((1 - f) * d) / Math.sin(d);
-            const B = Math.sin(f * d) / Math.sin(d);
-            const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
-            const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
-            const z = A * Math.sin(lat1) + B * Math.sin(lat2);
-            const lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
-            const lon = Math.atan2(y, x) * 180 / Math.PI;
-            points.push([lat, lon]);
+            const points = [];
+            for (let i = 0; i <= numPoints; i++) {
+                const f = i / numPoints;
+                const A = Math.sin((1 - f) * d) / Math.sin(d);
+                const B = Math.sin(f * d) / Math.sin(d);
+                const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
+                const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
+                const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+                const lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
+                const lon = Math.atan2(y, x) * 180 / Math.PI;
+                points.push([lat, lon]);
+            }
+            return points;
         }
-        return points;
-    }
 
-    // Options for the polyline
-    const polylineOptions = {
-        color: '#58c6f5',
-        weight: 1,
-        opacity: 0.6,
-        dashArray: '5, 10',
-        dashOffset: '0'
-    };
+        // Options for the polyline
+        const polylineOptions = {
+            color: '#58c6f5',
+            weight: 1,
+            opacity: 0.6,
+            dashArray: '5, 10',
+            dashOffset: '0'
+        };
 
-    // Function to animate the polyline
-    const animatePolyline = (polyline) => {
-        let offset = 0;
-        setInterval(() => {
-            offset = (offset + 1) % 15;
-            polyline.setStyle({ dashOffset: `${offset}` });
-        }, 100);
-    };
+        // Function to animate the polyline
+        const animatePolyline = (polyline) => {
+            let offset = 0;
+            setInterval(() => {
+                offset = (offset + 1) % 15;
+                polyline.setStyle({dashOffset: `${offset}`});
+            }, 100);
+        };
 
-    // Connect nodes with orthodromic lines (only connecting each point to the next one)
-    for (let i = 0; i < network.length - 1; i++) {
-        const start = {lat: network[i].lat, lon: network[i].lon};
-        const end = {lat: network[i+1].lat, lon: network[i+1].lon};
+        // Connect nodes with orthodromic lines (only connecting each point to the next one)
+        for (let i = 0; i < network.length - 1; i++) {
+            const start = {lat: network[i].lat, lon: network[i].lon};
+            const end = {lat: network[i + 1].lat, lon: network[i + 1].lon};
 
-        // Generate points along the great circle
-        const points = intermediatePoints(start, end, 100);
+            // Generate points along the great circle
+            const points = intermediatePoints(start, end, 100);
 
-        // Create a polyline with these points
-        const polyline = L.polyline(points, polylineOptions).addTo(map);
+            // Create a polyline with these points
+            const polyline = L.polyline(points, polylineOptions).addTo(map);
 
-        // Animate the polyline
-        animatePolyline(polyline);
+            // Animate the polyline
+            animatePolyline(polyline);
+        }
     }
     function explainByteCoin() {
         div = document.getElementById('message-for-player');
