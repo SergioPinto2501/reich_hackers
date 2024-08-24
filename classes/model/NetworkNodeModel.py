@@ -12,6 +12,7 @@ class NetworkNode:
         self.lat = lat
         self.lon = lon
         self.city = city
+        self.status = "online"
         self.os = self.generate_os()
         self.ip = ip
         self.open_ports = self.generate_open_ports()
@@ -22,7 +23,7 @@ class NetworkNode:
             self.db_engine = random.choice(["MySQL", "PostgreSQL", "SQLite", "MongoDB"])
 
     @classmethod
-    def recover_node(self, name, ip, type, os, open_ports, services, lat, lon, city) -> 'NetworkNode':
+    def recover_node(self, name, ip, type, os, open_ports, services, lat, lon, city, status) -> 'NetworkNode':
         self = NetworkNode.__new__(NetworkNode) # Create a new instance without calling __init__
         self.name = name
         self.ip = ip
@@ -33,6 +34,7 @@ class NetworkNode:
         self.lat = lat
         self.lon = lon
         self.city = city
+        self.status = status
         return self
 
     def generate_os(self) -> str:
@@ -207,7 +209,16 @@ class NetworkNode:
             'services': self.services,
             'lat': self.lat,
             'lon': self.lon,
-            'city': self.city
+            'city': self.city,
+            'status': self.status
 
         }
         return node_dict
+
+    def get_status(self) -> str:
+        return self.status
+    def get_name(self) -> str:
+        return self.name
+
+    def get_ip(self) -> str:
+        return self.ip

@@ -53,7 +53,7 @@ class NetworkModel:
         self = NetworkModel.__new__(NetworkModel)
         self.nodes = []
         for node in network:
-            node = NetworkNode.recover_node(node.get("name"), node.get("ip"), node.get("type"), node.get("os"), node.get("open_ports"), node.get("services"), node.get("lat"), node.get("lon"), node.get("city"))
+            node = NetworkNode.recover_node(node.get("name"), node.get("ip"), node.get("type"), node.get("os"), node.get("open_ports"), node.get("services"), node.get("lat"), node.get("lon"), node.get("city"), node.get("status"))
             self.nodes.append(node)
 
         return self
@@ -114,3 +114,13 @@ class NetworkModel:
     def show_nodes(self):
         for node in self.nodes:
             print(node)
+
+    def get_node_by_name(self, name: str) -> NetworkNode:
+        for node in self.nodes:
+            if node.get_name() == name:
+                return node
+
+    def get_node_by_ip(self, ip: str) -> NetworkNode:
+        for node in self.nodes:
+            if node.get_ip() == ip:
+                return node

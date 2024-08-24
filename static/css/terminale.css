@@ -1,0 +1,124 @@
+.terminal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    height: 600px;
+    font-family: 'Courier New', monospace;
+    z-index: 1000;
+
+}
+
+.terminal-frame {
+    background-color: #0a0a0a;
+    border: 2px solid #1a1a1a;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-header {
+    background: linear-gradient(to right, #2a2a2a, #1a1a1a);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.close { background-color: #ff5f56; }
+.minimize { background-color: #ffbd2e; }
+.maximize { background-color: #27c93f; }
+
+.terminal-title {
+    color: #ddd;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.terminal-body {
+    flex-grow: 1;
+    padding: 15px;
+    background-color: rgba(0, 20, 0, 0.9);
+    color: #33ff33;
+    font-size: 14px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: none; /* Per Firefox */
+    -ms-overflow-style: none; /* Per Internet Explorer e Edge */
+}
+
+.terminal-body::-webkit-scrollbar {
+    display: none; /* Per Chrome, Safari e Opera */
+}
+
+#terminal-output {
+    flex-grow: 1;
+    margin-bottom: 10px;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+}
+
+.prompt {
+    color: #33ff33;
+    margin-right: 8px;
+}
+
+#terminal-input-field {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    color: #33ff33;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    outline: none;
+}
+
+/* Effetto CRT */
+.terminal-body::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}
+
+/* Animazione di lampeggio del cursore */
+@keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+#terminal-input-field::after {
+    content: "|";
+    animation: blink 1s infinite;
+}
+w

@@ -129,7 +129,8 @@ class GameController(DatabaseController):
                 "services": str(node.services),
                 "lat": str(node.lat),
                 "lon": str(node.lon),
-                "city": str(node.city)
+                "city": str(node.city),
+                "status": str(node.status)
             })
 
         doc_ref = self.database.collection("games").document(str(gameId)).update({
@@ -206,6 +207,9 @@ class GameController(DatabaseController):
 
         doc_ref = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("network").document(node_name).update({
             "main": True
+        })
+        self.database.collection("games").document(str(game_id)).update({
+            "status": "in game"
         })
         print("Node " + node_name + " set as main")
         return True

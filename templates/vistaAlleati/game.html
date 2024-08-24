@@ -9,7 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/terminale.css') }}">
     <title>Alleati: World War II</title>
+    <style>
+
+    </style>
 </head>
 <body>
 <canvas id="network-background" style="position: absolute; top: 0; left: 0; z-index: -1;"></canvas>
@@ -48,14 +52,31 @@
     </div>
 </div>
 <div id="footer" class="footer">
-    <i class="fas fa-desktop icon" onclick=showChoiceDB()></i>
+    <i id="my_computer" class="fas fa-desktop icon" onclick=openTerminal()></i>
     <i id="show-map-button" class="fas fa-network-wired icon" onclick=showMapOfPlayer()></i>
     <i class="fas fa-shield-alt icon" onclick=showChoiceDB()></i>
     <i class="fas fa-virus icon" onclick=showChoiceDB()></i>
 </div>
 
-<div id="message-for-player" class="message-for-player">
-
+<div id="message-for-player" class="message-for-player"></div>
+<div id="terminal" class="terminal">
+    <div class="terminal-frame">
+        <div class="terminal-header">
+            <div class="terminal-controls">
+                <span class="control close"></span>
+                <span class="control minimize"></span>
+                <span class="control maximize"></span>
+            </div>
+            <span class="terminal-title">{{ player.username }} Command Terminal</span>
+        </div>
+        <div class="terminal-body">
+            <div id="terminal-output"></div>
+            <div class="terminal-input-line">
+                <span class="prompt">$</span>
+                <input type="text" id="terminal-input-field" autocomplete="off">
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="/static/js/canvas_background.js"></script>
@@ -66,6 +87,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 <script src="https://unpkg.com/leaflet-geodesic@2.0.0/leaflet.geodesic.js"></script>
+<script src="/static/js/alleati/terminale.js"></script>
 <script>
     window.onload = function() {
         showMapOfOpponent();
@@ -145,7 +167,8 @@
                     info.style.display = 'block';
                     info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                     <h2><strong>${node.name}</strong></h2>
-                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>`;
+                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
+                    <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>`;
                 });
             } else if (node.type == "Computer") {
                 L.marker([node.lat, node.lon], {icon: customIconComputer})
@@ -153,7 +176,8 @@
                     info.style.display = 'block';
                     info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                     <h2><strong>${node.name}</strong></h2>
-                    <p><strong>Indirizzo IP: </strong><br>${node.ip}`;
+                    <p><strong>Indirizzo IP: </strong><br>${node.ip}
+                    <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>`;
                 });
             }
 
@@ -286,13 +310,13 @@
         network.forEach(node => {
             // Parse the services string into an object
             let services = {};
-                if (node.services.startsWith('{') && node.services.endsWith('}')) {
-                    const pairs = node.services.slice(1, -1).split(', ');
-                    for (const pair of pairs) {
-                        const [key, value] = pair.split(': ');
-                        services[parseInt(key)] = value.slice(1, -1); // Rimuovi le virgolette
-                    }
+            if (node.services.startsWith('{') && node.services.endsWith('}')) {
+                const pairs = node.services.slice(1, -1).split(', ');
+                for (const pair of pairs) {
+                    const [key, value] = pair.split(': ');
+                    services[parseInt(key)] = value.slice(1, -1); // Rimuovi le virgolette
                 }
+            }
             // Convert the services object into a string
             let porte = '';
             let servizi = '';
@@ -305,10 +329,11 @@
 
             if(node.type == "Database") {
                 L.marker([node.lat, node.lon], { icon: customIconDatabase })
-                .addTo(map).on('click', () => {
-                info.style.display = 'block';
-                info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
+                    .addTo(map).on('click', () => {
+                    info.style.display = 'block';
+                    info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                         <h2><strong>${node.name}</strong></h2>
+                        <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>
                         <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
                         <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
                         <p><strong>Porte aperte: </strong><br>${porte}</p>
@@ -316,10 +341,11 @@
                 });
             }else if(node.type == "Computer") {
                 L.marker([node.lat, node.lon], { icon: customIconComputer })
-                .addTo(map).on('click', () => {
-                info.style.display = 'block';
-                info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
+                    .addTo(map).on('click', () => {
+                    info.style.display = 'block';
+                    info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                         <h2><strong>${node.name}</strong></h2>
+                        <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>
                         <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
                         <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
                         <p><strong>Porte aperte: </strong><br>${porte}</p>
@@ -329,7 +355,7 @@
 
         });
         // Existing code for map initialization remains the same
-    // The following code is added to the end of the file
+        // The following code is added to the end of the file
 
         // Function to calculate intermediate points on a great circle
         function intermediatePoints(start, end, numPoints) {
@@ -390,6 +416,8 @@
             animatePolyline(polyline);
         }
     }
+    //metodi del terminale da spostare in un file apparte
+
 </script>
 </body>
 </html>
