@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/terminale.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shop.css') }}">
     <title>Alleati: World War II</title>
     <style>
 
@@ -55,7 +56,7 @@
     <i id="my_computer" class="fas fa-desktop icon" onclick=openTerminal()></i>
     <i id="show-map-button" class="fas fa-network-wired icon" onclick=showMapOfPlayer()></i>
     <i class="fas fa-shield-alt icon" onclick=showChoiceDB()></i>
-    <i class="fas fa-virus icon" onclick=showChoiceDB()></i>
+    <i id="buy_software" class="fas fa-virus icon" onclick=showShop()></i>
 </div>
 
 <div id="message-for-player" class="message-for-player"></div>
@@ -77,6 +78,68 @@
         </div>
     </div>
 </div>
+<div id="shop" class="shop">
+    <div class="shop-frame">
+        <div class="shop-header">
+            <div class="shop-controls">
+                <span class="control close"></span>
+                <span class="control minimize"></span>
+            </div>
+        </div>
+        <h1>Tools Kit</h1>
+        <div class="category">
+            <h2>Recoinnance</h2>
+            <div class="softwares">
+                <div class="software">
+                    <button class="button-img-tool "><img id="rec" src="{{ url_for('static', filename='images/softwareLogo/nmap.png')}}"></button>
+                    <div class="tool">Nmap</div>
+                </div>
+                <div class="software">
+                    <button class="button-img-tool "><img id="rec" src="{{ url_for('static', filename='images/softwareLogo/shodan.png')}}"></button>
+                    <div class="tool">Shodan</div>
+                </div>
+            </div>
+        </div>
+        <div class="category">
+            <h2>Weaponization</h2>
+            <div class="softwares">
+                <div class="software">
+                    <button class="button-img-tool "><img id="rec" src="{{ url_for('static', filename='images/softwareLogo/set.png')}}"></button>
+                    <div class="tool">Social-Engineer Toolkit (SET)</div>
+                </div>
+                <div class="software">
+                    <button class="button-img-tool "><img id="rec" src="{{ url_for('static', filename='images/softwareLogo/beef.png')}}"></button>
+                    <div class="tool">Beef</div>
+                </div>
+        </div>
+        <div class="category">
+            <h2>Delivery</h2>
+            <div class="tool">Social-Engineer Toolkit (SET) - Framework per attacchi di ingegneria sociale</div>
+            <div class="tool">Beef - Framework per l'exploit di browser</div>
+        </div>
+        <div class="category">
+            <h2>Exploitation</h2>
+            <div class="tool">Burp Suite - Piattaforma per test di sicurezza di applicazioni web</div>
+            <div class="tool">John the Ripper - Cracker di password</div>
+        </div>
+        <div class="category">
+            <h2>Installation</h2>
+            <div class="tool">Mimikatz - Strumento per l'estrazione di credenziali</div>
+            <div class="tool">Responder - Strumento per avvelenamento LLMNR/NBT-NS/MDNS</div>
+        </div>
+        <div class="category">
+            <h2>Comand & Controll</h2>
+            <div class="tool">Cobalt Strike - Piattaforma per operazioni di red team</div>
+            <div class="tool">Empire - Framework post-exploitation</div>
+        </div>
+        <div class="category">
+            <h2>Action on Objectives</h2>
+            <div class="tool">Wireshark - Analizzatore di protocollo di rete</div>
+            <div class="tool">Aircrack-ng - Suite per l'audit di reti wireless</div>
+        </div>
+    </div>
+</div>
+</div>
 
 <script src="/static/js/canvas_background.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -87,6 +150,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 <script src="https://unpkg.com/leaflet-geodesic@2.0.0/leaflet.geodesic.js"></script>
 <script src="/static/js/alleati/terminale.js"></script>
+<script src="/static/js/shop.js"></script>
 <script>
     window.onload = function() {
         showMapOfOpponent();
