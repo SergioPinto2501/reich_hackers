@@ -8,19 +8,18 @@ document.getElementById('terminal-input-field').onkeypress = handleTerminalInput
 document.addEventListener('DOMContentLoaded', () => {
     const output = document.getElementById('terminal-output');
     output.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <pre style="color: #ffcc00;">
-             _    _ _ _          _   _____                                          _
-            / \\  | | (_) ___  __| | / ____|___  _ __ ___  _ __ ___   __ _ _ __   __| |
-           / _ \\ | | | |/ _ \\/ _\` || |   / _ \\| '_ \` _ \\| '_ \` _ \\ / _\` | '_ \\ / _\` |
-          / ___ \\| | | |  __/ (_| || |__| (_) | | | | | | | | | | | (_| | | | | (_| |
-         /_/   \\_\\_|_|_|\\___|\\__,_| \\____\\___/|_| |_| |_|_| |_| |_|\\__,_|_| |_|\\__,_|
-        
-                    </pre>
-                </div>
-                <div>Benvenuti nel terminale degli Alleati. Digita il comando “help” per ottenere un elenco dei comandi disponibili.</div>
-                <div>--------------------</div>
-            `;
+        <div style="text-align: center; margin-bottom: 20px;">
+                            <pre style="color: #ff4500;">
+                         _____     _                         _____                                          _ 
+                        |  _  |_ _|_|___    _____ ___ _ _ ___|     |___ _ _ _ ___ ___    ___ ___ _____ ___| |
+                        |     | | | |_ -|  |  _  | . | | | -_|   --| . | | | | .'|   |  |  _| . |     | .'| |
+                        |__|__|_  |_|___|  |   __|___|___|___|_____|___|_____|__,|_|_|  |_| |___|_|_|_|__,|_|
+                              |___|        |__|                                                                
+                            </pre>
+        </div>
+        <div>Benvenuti nel terminale delle Potenze dell'Asse. Digita il comando “help” per ottenere un elenco dei comandi disponibili.</div>
+        <div>--------------------</div>
+    `;
 });
 
 
@@ -28,6 +27,7 @@ function openTerminal() {
     document.getElementById('terminal').style.display = 'block';
     document.getElementById('terminal-input-field').focus();
 }
+
 function minimizeTerminal() {
     document.getElementById('terminal').style.display = 'none';
 
@@ -36,19 +36,18 @@ function minimizeTerminal() {
 function closeTerminal() {
     const output = document.getElementById('terminal-output');
     output.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <pre style="color: #ffcc00;">
-             _    _ _ _          _   _____                                          _
-            / \\  | | (_) ___  __| | / ____|___  _ __ ___  _ __ ___   __ _ _ __   __| |
-           / _ \\ | | | |/ _ \\/ _\` || |   / _ \\| '_ \` _ \\| '_ \` _ \\ / _\` | '_ \\ / _\` |
-          / ___ \\| | | |  __/ (_| || |__| (_) | | | | | | | | | | | (_| | | | | (_| |
-         /_/   \\_\\_|_|_|\\___|\\__,_| \\____\\___/|_| |_| |_|_| |_| |_|\\__,_|_| |_|\\__,_|
-        
-                    </pre>
-                </div>
-                <div>Benvenuti nel terminale degli Alleati. Digita il comando “help” per ottenere un elenco dei comandi disponibili.</div>
-                <div>--------------------</div>
-            `;
+        <div style="text-align: center; margin-bottom: 20px;">
+                            <pre style="color: #ff4500;">
+                         _____     _                         _____                                          _ 
+                        |  _  |_ _|_|___    _____ ___ _ _ ___|     |___ _ _ _ ___ ___    ___ ___ _____ ___| |
+                        |     | | | |_ -|  |  _  | . | | | -_|   --| . | | | | .'|   |  |  _| . |     | .'| |
+                        |__|__|_  |_|___|  |   __|___|___|___|_____|___|_____|__,|_|_|  |_| |___|_|_|_|__,|_|
+                              |___|        |__|                                                                
+                            </pre>
+        </div>
+        <div>Benvenuti nel terminale delle Potenze dell'Asse. Digita il comando “help” per ottenere un elenco dei comandi disponibili.</div>
+        <div>--------------------</div>
+    `;
     document.getElementById('terminal').style.display = 'none';
 }
 
@@ -103,7 +102,6 @@ function clear(){
     const output = document.getElementById('terminal-output');
             output.innerHTML = ``;
 }
-
 
 let intervalId;
 

@@ -65,14 +65,13 @@
             <div class="terminal-controls">
                 <span class="control close"></span>
                 <span class="control minimize"></span>
-                <span class="control maximize"></span>
             </div>
             <span class="terminal-title">{{ player.username }} Command Terminal</span>
         </div>
         <div class="terminal-body">
             <div id="terminal-output"></div>
             <div class="terminal-input-line">
-                <span class="prompt">$</span>
+                <span class="prompt">{{ player.username }}$</span>
                 <input type="text" id="terminal-input-field" autocomplete="off">
             </div>
         </div>
@@ -416,8 +415,6 @@
             animatePolyline(polyline);
         }
     }
-    //metodi del terminale da spostare in un file apparte
-
 </script>
 </body>
 </html>

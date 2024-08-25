@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/terminale.css') }}">
+
     <title>Potenze dell'Asse: World War II</title>
 </head>
 <body>
@@ -48,14 +50,32 @@
     </div>
 </div>
 <div id="footer" class="footer">
-    <i class="fas fa-desktop icon" onclick=showChoiceDB()></i>
+    <i id="my_computer" class="fas fa-desktop icon" onclick=openTerminal()></i>
     <i id="show-map-button" class="fas fa-network-wired icon" onclick=showMapOfPlayer()></i>
     <i class="fas fa-shield-alt icon" onclick=showChoiceDB()></i>
     <i class="fas fa-virus icon" onclick=showChoiceDB()></i>
 </div>
-<div id="message-for-player" class="message-for-player">
-
+<div id="message-for-player" class="message-for-player"></div>
+<div id="message-for-player" class="message-for-player"></div>
+<div id="terminal" class="terminal">
+    <div class="terminal-frame">
+        <div class="terminal-header">
+            <div class="terminal-controls">
+                <span class="control close"></span>
+                <span class="control minimize"></span>
+            </div>
+            <span class="terminal-title">{{ player.username }} Command Terminal</span>
+        </div>
+        <div class="terminal-body">
+            <div id="terminal-output"></div>
+            <div class="terminal-input-line">
+                <span class="prompt">{{ player.username }}$</span>
+                <input type="text" id="terminal-input-field" autocomplete="off">
+            </div>
+        </div>
+    </div>
 </div>
+<script src="/static/js/asse/terminale.js"></script>
 <script src="/static/js/canvas_background.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
@@ -143,11 +163,8 @@
                     info.style.display = 'block';
                     info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                     <h2><strong>${node.name}</strong></h2>
-                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
-                    <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
-                    <p><strong>Porte aperte: </strong><br>${porte}</p>
-                    <p><strong>Servizi:</strong><br> ${servizi}</p>
-                    <button onclick="setDatabase('${node.name}')"> Rendi principale</button>`;
+                    <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>
+                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>`;
                 });
             } else if (node.type == "Computer") {
                 L.marker([node.lat, node.lon], {icon: customIconComputer})
@@ -155,10 +172,8 @@
                     info.style.display = 'block';
                     info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                     <h2><strong>${node.name}</strong></h2>
-                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
-                    <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
-                    <p><strong>Porte aperte: </strong><br>${porte}</p>
-                    <p><strong>Servizi:</strong><br> ${servizi}</p>`;
+                    <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>
+                    <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>`;
                 });
             }
 
@@ -357,6 +372,7 @@
                 info.style.display = 'block';
                 info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                         <h2><strong>${node.name}</strong></h2>
+                        <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>
                         <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
                         <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
                         <p><strong>Porte aperte: </strong><br>${porte}</p>
@@ -368,6 +384,7 @@
                 info.style.display = 'block';
                 info.innerHTML = `<button onclick="closeInfoNodo()" id="close-info" style="position: absolute; top: 5px; right: 5px;">X</button>
                         <h2><strong>${node.name}</strong></h2>
+                        <p style="color: green;"><strong style="color: white">Status:</strong><br>${node.status}</p>
                         <p><strong>Indirizzo IP: </strong><br>${node.ip}</p>
                         <p><strong>Sistema Opertivo:</strong><br> ${node.os}</p>
                         <p><strong>Porte aperte: </strong><br>${porte}</p>

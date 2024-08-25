@@ -175,8 +175,12 @@ def get_node_status(node_ip):
                 session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
     node = player.getNetwork().get_node_by_ip(node_ip)
-    print("Stato " + str(node.get_name) + str(node.get_status()))
+    if(node == None):
+        opponent = GameController().getOpponent(game_id, player)
+        node = opponent.getNetwork().get_node_by_ip(node_ip)
+
     return {'status': node.get_status()}
+
 
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
