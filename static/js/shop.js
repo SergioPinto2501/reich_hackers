@@ -15,3 +15,55 @@ function showShop() {
         div = document.getElementById('shop');
         div.style.display = 'block';
 }
+
+document.getElementById("nmap").addEventListener("click", function() {
+    message_div = document.getElementById('message-for-player');
+    message_div.style.zIndex = 3000;
+    message_div.innerHTML = "Nmap è un software di scansione di rete. Vuoi acquistarlo?";
+    message_div.style.display = 'block';
+
+    button_yes = document.createElement('button');
+    button_yes.innerHTML = 'Sì';
+    button_no = document.createElement('button');
+    button_no.innerHTML = 'No';
+
+    message_div.appendChild(button_yes);
+    message_div.appendChild(button_no);
+
+    button_yes.onclick = function() {
+        fetch('/check_tool/nmap')
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === 'success') {
+                fetch('/add_tool/nmap')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            message_div.innerHTML = "Hai acquistato Nmap!";
+                            button = document.createElement('button');
+                            button.innerHTML = 'OK';
+                            button.onclick = function() {
+                                message_div.style.display = 'none';
+                                window.location.reload();
+                            };
+                            message_div.appendChild(button);
+                        } else {
+                            alert("Non hai abbastanza soldi per acquistare Nmap!");
+                            message_div.style.display = 'none';
+                        }
+                    });
+            }else {
+                  message_div.innerHTML = "Hai acquistato Nmap in precedenza!";
+                  button = document.createElement('button');
+                  button.innerHTML = 'OK';
+                  button.onclick = function() {
+                      message_div.style.display = 'none';
+                  };
+                    message_div.appendChild(button);
+            }
+    });
+
+    button_no.onclick = function() {
+        message_div.style.display = 'none';
+    };
+}});

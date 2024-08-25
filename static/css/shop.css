@@ -116,3 +116,13 @@
     height: 100px;
     object-fit: cover; /* Mantiene il rapporto d'aspetto dell'immagine */
 }
+.price {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+.price img {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+}

@@ -139,7 +139,6 @@ def set_database(node_name):
     game_id = session.get('game_id')
     user = User(session['user']['username'], session['user']['email'], session['user']['name'],session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
-
     result = GameController().set_database(game_id, player, node_name)
     print("Esito:" , result)
     if(result):
@@ -168,6 +167,14 @@ def game_alleati():
     network_dicts_opponent = [node.to_dict() for node in opponent.getNetwork().get_nodes()]
     return render_template('vistaAlleati/game.html',player=player, network_player=network_dicts_player, network_opponent=network_dicts_opponent)
 
+@app.route('/get_tools_list')
+def get_tools():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    print("cosa succede :", player.getTools())
+    return {'tools': player.getTools()}
 @app.route('/get_node_status/<node_ip>')
 def get_node_status(node_ip):
     game_id = session.get('game_id')
@@ -181,7 +188,32 @@ def get_node_status(node_ip):
 
     return {'status': node.get_status()}
 
+@app.route('/check_tool/<tool>')
+def check_tool(tool):
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    result = GameController().check_tool(game_id, player, tool)
+    if(result):
+        return {'status': 'success'}
+    else:
+        return {'status': 'error'}
+@app.route('/add_tool/<tool>')
+def add_tool(tool):
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
 
+    if(player.getByteCoin()<10):
+        return {'status': 'error'}
+    else:
+        result = GameController().add_tool(game_id, player, tool)
+        if(result):
+            return {'status': 'success'}
+        else:
+            return {'status': 'error'}
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
 def mitreattack_api():

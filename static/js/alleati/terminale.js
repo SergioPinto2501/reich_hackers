@@ -52,6 +52,16 @@ function closeTerminal() {
     document.getElementById('terminal').style.display = 'none';
 }
 
+const toolOfPlayer = [];
+fetch('/get_tools_list')
+    .then(response => response.json())
+    .then(data => {
+        let toAdd = '';
+        for (let i = 0; i < data.tools.length; i++) {
+            toolOfPlayer.push(data.tools[i]);
+        }
+    });
+
 function handleTerminalInput(event) {
     if (event.key === 'Enter') {
         commandTyped = document.getElementById('terminal-input-field').value;
@@ -65,7 +75,7 @@ function handleTerminalInput(event) {
 
         switch (command) {
             case 'help':
-                help();
+                help(toolOfPlayer);
                 break;
             case 'clear':
                 clear();
@@ -80,6 +90,15 @@ function handleTerminalInput(event) {
             case 'exit':
                 closeTerminal();
                 break;
+            case 'nmap':
+                if(toolOfPlayer.includes('nmap')){
+                    if(param)
+                        nmap(param);
+                    else
+                        output.innerHTML += `<div>Errore: inserire un indirizzo IP valido</div>`;
+                }else
+                    output.innerHTML += `<div>Errore: non hai acquistato nmap</div>`;
+                break;
             default:
                 output.innerHTML += `<div>Comando non riconosciuto. Digita “help” per visualizzare l'elenco dei comandi disponibili.</div>`;
                 break;
@@ -88,7 +107,7 @@ function handleTerminalInput(event) {
         output.scrollTop = output.scrollHeight;
     }
 }
-function help(){
+function help(toAdd) {
     const output = document.getElementById('terminal-output');
     output.innerHTML += `
         <div>--------------------</div>
@@ -96,8 +115,9 @@ function help(){
         <div>help - Mostra l'elenco dei comandi disponibili</div>
         <div>clear - Pulisce il terminale</div>
         <div>ping - Controlla la connessione</div>
-        <div>--------------------</div>
-        `;
+    `;
+    output.innerHTML += toAdd;
+    output.innerHTML += `<div>--------------------</div>`;
 }
 function clear(){
     const output = document.getElementById('terminal-output');
@@ -127,6 +147,13 @@ function ping(indirizzo) {
                 }
             });
     }, 1000);
+}
+function nmap(indirizzo){
+    const output = document.getElementById('terminal-output');
+    output.innerHTML += `<div>--------------------</div>`;
+    output.innerHTML += `<div>Premi Ctrl + c per interrompere l'esecuzione del comando</div>`;
+    output.innerHTML += `<div>Scansione in corso su ${indirizzo}...</div>`;
+
 }
 
 document.addEventListener('keydown', (event) => {
