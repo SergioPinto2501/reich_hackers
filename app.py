@@ -185,8 +185,10 @@ def get_node_status(node_ip):
     if(node == None):
         opponent = GameController().getOpponent(game_id, player)
         node = opponent.getNetwork().get_node_by_ip(node_ip)
-
-    return {'status': node.get_status()}
+    if(node == None):
+        return {'status': 'null'}
+    else:
+        return {'status': node.get_status()}
 
 @app.route('/check_tool/<tool>')
 def check_tool(tool):
@@ -214,6 +216,21 @@ def add_tool(tool):
             return {'status': 'success'}
         else:
             return {'status': 'error'}
+
+@app.route('/get_node_info/<node_ip>')
+def get_node_info(node_ip):
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    node = player.getNetwork().get_node_by_ip(node_ip)
+    if(node == None):
+        opponent = GameController().getOpponent(game_id, player)
+        node = opponent.getNetwork().get_node_by_ip(node_ip)
+    if(node == None):
+        return {'node': 'null'}
+    else:
+        return {'node': node.to_dict()}
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
 def mitreattack_api():

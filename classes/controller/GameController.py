@@ -200,7 +200,6 @@ class GameController(DatabaseController):
         tools = self.database.collection("games").document(str(gameId)).collection("players").document("player" + str(playerType)).collection("tools").get()
         for tool in tools:
             playerTools.append(tool.get("name"))
-        print("Nome avversario: ",playerFromDB.get("username"))
         player = Player.recoveredPlayer(playerFromDB.get("username"), playerFromDB.get("faction"),
                                       playerFromDB.get("ByteCoin"), playerNetwork,playerTools)
 

@@ -136,7 +136,7 @@ function ping(indirizzo) {
         fetch("get_node_status/" + indirizzo)
             .then(response => response.json())
             .then(data => {
-                if (data.status == "online") {
+                if (data.status === "online") {
                     output.innerHTML += `
                 <div> Risposta da ${indirizzo} byte=32 durata=4ms TTL=64</div>
                 `;
@@ -149,10 +149,47 @@ function ping(indirizzo) {
     }, 1000);
 }
 function nmap(indirizzo){
+    const dataTime = getCurrentDateTime();
     const output = document.getElementById('terminal-output');
     output.innerHTML += `<div>--------------------</div>`;
     output.innerHTML += `<div>Premi Ctrl + c per interrompere l'esecuzione del comando</div>`;
-    output.innerHTML += `<div>Scansione in corso su ${indirizzo}...</div>`;
+    output.innerHTML += `<div>Starting Nmap ${indirizzo} at ${dataTime}...</div>`;
+    fetch("get_node_info/" + indirizzo)
+        .then(response => response.json())
+        .then(data => {
+            if(data.node === 'null'){
+                output.innerHTML += `<div>Host non raggiungibile</div>`;
+                output.innerHTML += `<div>--------------------</div>`;
+            }else {
+                output.innerHTML += `<br><div>Stato: ${data.node.status}</div>`;
+                output.innerHTML += `<div>Nome: ${data.node.name}</div>`;
+                output.innerHTML += `<div>Indirizzo IP: ${data.node.ip}</div>`;
+                output.innerHTML += `<div>OS: ${data.node.os}</div>`;
+                output.innerHTML += `<br><div>Interesting port on ${indirizzo}...</div>`;
+                let services = {};
+                if (data.node.services.startsWith('{') && data.node.services.endsWith('}')) {
+                    const pairs = data.node.services.slice(1, -1).split(', ');
+                    for (const pair of pairs) {
+                        const [key, value] = pair.split(': ');
+                        services[parseInt(key)] = value.slice(1, -1); // Rimuovi le virgolette
+                    }
+                }
+                // Convert the services object into a string
+                let porte = [];
+                let servizi = [];
+                Object.entries(services).forEach(([port, service]) => {
+                    porte.push(port);
+                    servizi.push(service);
+                });
+                console.log(porte);
+                console.log(servizi);
+                output.innerHTML += `<div>PORT&nbsp;STATE&nbsp;SERVICE</div>`;
+                for (let i = 0; i < porte.length; i++) {
+                    output.innerHTML += `<div>${porte[i]}&nbsp;open&nbsp;${servizi[i]}</div>`;
+                }
+                output.innerHTML += `<div>--------------------</div>`;
+            }
+        });
 
 }
 
@@ -163,3 +200,9 @@ document.addEventListener('keydown', (event) => {
         output.innerHTML += `<div>Richiesta interrotta dall'utente</div><div>--------------------</div>`;
     }
 });
+function getCurrentDateTime() {
+    const now = new Date();
+    const date = now.toLocaleDateString();
+    const time = now.toLocaleTimeString();
+    return `${date} ${time}`;
+}
