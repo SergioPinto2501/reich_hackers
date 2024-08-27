@@ -3,10 +3,10 @@ from flask import Flask,render_template, request, redirect, url_for, flash, sess
 from flask import make_response
 from classes.controller.DatabaseController import DatabaseController
 from classes.controller.GameController import GameController
-from classes.model.GameModel import GameModel
 from classes.model.PlayerClassesModel import Player
 from classes.model.PlayerClassesModel import User
 from classes.controller.AuthController import AuthController
+
 
 from classes.MitreAttackAPI import MitreAttackClass
 app = Flask(__name__)
@@ -173,7 +173,6 @@ def get_tools():
     user = User(session['user']['username'], session['user']['email'], session['user']['name'],
                 session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
-    print("cosa succede :", player.getTools())
     return {'tools': player.getTools()}
 @app.route('/get_node_status/<node_ip>')
 def get_node_status(node_ip):

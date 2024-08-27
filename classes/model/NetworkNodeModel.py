@@ -98,12 +98,13 @@ class NetworkNode:
 
     def generate_services(self, vulnerabile_index) -> Dict[int, str]:
         vulenrabile_services = {
+
             21: ["FTP vsftpd 2.3.4", "FTP vsftpd 2.0.5"],
-            22: ["SSH OpenSSH 6.6", "SSH OpenSSH 5.3"],
-            25: ["SMTP Exim 4.87", "SMTP Exim 4.86"],
-            53: ["DNS BIND 9.4.2", "DNS BIND 9.3.6"],
+            22: ["SSH OpenSSH 6.6"],
+            25: ["SMTP Exim 4.87"],
+            53: ["DNS BIND 9.4.2"],
+
             80: ["HTTP Apache 2.2.34", "HTTP Apache 2.2.29"],
-            443: ["HTTPS Nginx 1.6.2", "HTTPS Nginx 1.4.7"],
             3306: ["MySQL 5.5.52", "MySQL 5.6.31", "MySQL 5.7.15"],
             5432: ["PostgreSQL 9.3.10", "PostgreSQL 9.4.5", "PostgreSQL 9.5.2"],
             8080: ["SQLite 3.31.1", "SQLite 3.32.0", "SQLite 3.28.0"],
