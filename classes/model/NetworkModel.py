@@ -6,6 +6,24 @@ class NetworkModel:
 
     faction = None
     nodes = []
+
+    nomi_alleati = ["John", "James", "Robert", "Michael", "David", "William", "George", "Charles", "Joseph", "Vladimir",
+                    "Mary", "Elizabeth",
+                    "Patricia", "Margaret", "Barbara", "Susan", "Dorothy", "Nancy", "Frances", "Olga"]
+
+    cognomi_alleati = ["Smith", "Johnson", "Brown", "Williams", "Jones", "Miller", "Davis", "Wilson", "Taylor",
+                       "Anderson", "Martin", "Thompson", "White", "Moore", "Clark", "Lewis", "Walker", "Hall", "Young",
+                       "King"]
+
+    nomi_asse = ["Giovanni", "Antonio", "Mario", "Francesco", "Luigi", "Hans", "Heinrich", "Friedrich", "Kurt",
+                 "Hiroshi", "Maria", "Anna", "Giuseppina", "Rosa", "Franca", "Helga", "Ingrid", "Ursula", "Yoko",
+                 "Sakura"]
+
+    cognomi_asse = ["Rossi", "Bianchi", "Ricci", "Conti", "De Luca", "Müller", "Schmidt", "Schneider", "Fischer",
+                    "Tanaka", "Kobayashi", "Yamamoto", "Ito", "Watanabe", "Sato", "Weber", "Maier", "Bauer", "Hoffmann",
+                    "Richter"]
+
+
     original_cities_coordinates_dict_for_allies= {
         "Londra": (51.5074, -0.1278),
         "Washington D.C.": (38.8951, -77.0369),
@@ -53,7 +71,8 @@ class NetworkModel:
         self = NetworkModel.__new__(NetworkModel)
         self.nodes = []
         for node in network:
-            node = NetworkNode.recover_node(node.get("name"), node.get("ip"), node.get("type"), node.get("os"), node.get("open_ports"), node.get("services"), node.get("lat"), node.get("lon"), node.get("city"), node.get("status"))
+            node = NetworkNode.recover_node(node.get("name"), node.get("ip"), node.get("type"), node.get("os"), node.get("open_ports"), node.get("services"), node.get("lat"), node.get("lon"), node.get("city"), node.get("status"),
+                                            node.get("token"), node.get("employeeName"), node.get("employeeSurname"), node.get("email"), node.get("password"))
             self.nodes.append(node)
 
         return self
@@ -67,9 +86,11 @@ class NetworkModel:
         nodes = []
         used_names = set()
         used_ips = set()
+        used_tokens = set()
         database_count = 0
 
         for _ in range(10):
+            token = self.generete_unique_token(used_tokens)
             name = self.generate_unique_name(used_names)
             ip = self.generate_unique_ip(used_ips)
             if database_count < 3:
@@ -85,7 +106,11 @@ class NetworkModel:
             lon = duplicate_cities_coordinates_dict[city][1]
             del duplicate_cities_coordinates_dict[city]
 
-            node = NetworkNode(name=name, ip=ip, type=node_type, lat=lat, lon=lon, city=city)
+            employee_name = self.generate_name()
+            employee_surname = self.generate_surname()
+            email = self.generate_email(employee_name, employee_surname)
+
+            node = NetworkNode(name=name, ip=ip, type=node_type, lat=lat, lon=lon, city=city, token=token, employeeName=employee_name, employeeSurname=employee_surname, email=email)
 
             nodes.append(node)
 
@@ -98,6 +123,12 @@ class NetworkModel:
                 used_names.add(name)
                 return name
 
+    def generete_unique_token(self, used_tokens: set) -> str:
+        while True:
+            token = f"Token-{random.randint(1, 1000)}"
+            if token not in used_tokens:
+                used_tokens.add(token)
+                return token
     def generate_unique_ip(self, used_ips: set) -> str:
         while True:
             if(self.faction == "Alleati"):
@@ -124,3 +155,21 @@ class NetworkModel:
         for node in self.nodes:
             if node.get_ip() == ip:
                 return node
+
+    def generate_name(self) -> str:
+        if (self.faction == "Alleati"):
+            return random.choice(self.nomi_alleati)
+        else:
+            return random.choice(self.nomi_asse)
+
+    def generate_surname(self) -> str:
+        if (self.faction == "Alleati"):
+            return random.choice(self.cognomi_alleati)
+        else:
+            return random.choice(self.cognomi_asse)
+
+    def generate_email(self, name: str, surname: str) -> str:
+        if (self.faction == "Alleati"):
+            return name.lower() + "." + surname.lower() + "@allies.com"
+        else:
+            return name.lower() + "." + surname.lower() + "@axis.com"

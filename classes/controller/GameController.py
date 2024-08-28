@@ -132,7 +132,12 @@ class GameController(DatabaseController):
                 "lat": str(node.lat),
                 "lon": str(node.lon),
                 "city": str(node.city),
-                "status": str(node.status)
+                "status": str(node.status),
+                "employeeName": str(node.employeeName),
+                "employeeSurname": str(node.employeeSurname),
+                "email": str(node.email),
+                "password": str(node.password),
+                "token": str(node.token)
             })
 
         doc_ref = self.database.collection("games").document(str(gameId)).update({

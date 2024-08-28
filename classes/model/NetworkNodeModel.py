@@ -6,7 +6,10 @@ from typing import List, Dict, Optional, Any
 
 class NetworkNode:
     vulnerable_random_numer = 0
-    def __init__(self, name, ip, type, lat, lon, city) -> None:
+
+
+    def __init__(self, name, ip, type, lat, lon, city, token, employeeName, employeeSurname, email) -> None:
+        self.token = token
         self.name = name
         self.type = type
         self.lat = lat
@@ -22,8 +25,13 @@ class NetworkNode:
             self.data = self.generate_database_data()
             self.db_engine = random.choice(["MySQL", "PostgreSQL", "SQLite", "MongoDB"])
 
+        self.employeeName = employeeName
+        self.employeeSurname = employeeSurname
+        self.email = email
+        self.password = self.generate_password()
+
     @classmethod
-    def recover_node(self, name, ip, type, os, open_ports, services, lat, lon, city, status) -> 'NetworkNode':
+    def recover_node(self, name, ip, type, os, open_ports, services, lat, lon, city, status, token, employeeName,employeeSurname, email, password) -> 'NetworkNode':
         self = NetworkNode.__new__(NetworkNode) # Create a new instance without calling __init__
         self.name = name
         self.ip = ip
@@ -35,6 +43,10 @@ class NetworkNode:
         self.lon = lon
         self.city = city
         self.status = status
+        self.employeeName = employeeName
+        self.employeeSurname = employeeSurname
+        self.email = email
+        self.password = password
         return self
 
     def generate_os(self) -> str:
@@ -48,7 +60,7 @@ class NetworkNode:
     def generate_open_ports(self) -> List[int]:
         port = []
         casual_db_port = [3306, 5432, 8080, 27017]
-        casual_port = [21, 22, 25, 53, 80, 443]
+        casual_port = [21, 22, 25, 53, 80]
         port_to_add = 0
         NetworkNode.vulnerable_random_numer = random.randint(0, 10)
         if (NetworkNode.vulnerable_random_numer == 0):
@@ -68,14 +80,12 @@ class NetworkNode:
             case 5:
                 port_to_add = 80
             case 6:
-                port_to_add = 443
-            case 7:
                 port_to_add = 3306
-            case 8:
+            case 7:
                 port_to_add = 5432
-            case 9:
+            case 8:
                 port_to_add = 8080
-            case 10:
+            case 9:
                 port_to_add = 27017
             case _:
                 port_to_add = 0 # Default case, non vulnerabile
@@ -103,7 +113,6 @@ class NetworkNode:
             22: ["SSH OpenSSH 6.6"],
             25: ["SMTP Exim 4.87"],
             53: ["DNS BIND 9.4.2"],
-
             80: ["HTTP Apache 2.2.34", "HTTP Apache 2.2.29"],
             3306: ["MySQL 5.5.52", "MySQL 5.6.31", "MySQL 5.7.15"],
             5432: ["PostgreSQL 9.3.10", "PostgreSQL 9.4.5", "PostgreSQL 9.5.2"],
@@ -113,12 +122,11 @@ class NetworkNode:
 
         #Da aggiungere alla documentazione
         not_vulnerabile_services = {
-            21: ["FTP vsftpd 3.0.3", "FTP vsftpd 3.0.2"],
-            22: ["SSH OpenSSH 8.4", "SSH OpenSSH 7.9"],
-            25: ["SMTP Postfix 3.5.6", "SMTP Postfix 3.4.7"],
-            53: ["DNS BIND 9.16.12", "DNS BIND 9.11.26"],
-            80: ["HTTP Apache 2.4.48", "HTTP Apache 2.4.46"],
-            443: ["HTTPS Nginx 1.20.1", "HTTPS Nginx 1.19.10"],
+            21: ["FTP vsftpd 3.0.3"],
+            22: ["SSH OpenSSH 8.4"],
+            25: ["SMTP Postfix 3.5.6"],
+            53: ["DNS BIND 9.16.12"],
+            80: ["HTTP Apache 2.4.48"],
             3306: ["MySQL 8.0.25", "MySQL 8.0.23"],
             5432: ["PostgreSQL 13.4", "PostgreSQL 12.7"],
             8080: ["SQLite 3.35.5", "SQLite 3.34.1"],
@@ -223,3 +231,6 @@ class NetworkNode:
 
     def get_ip(self) -> str:
         return self.ip
+
+    def generate_password(self) -> str:
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=16))
