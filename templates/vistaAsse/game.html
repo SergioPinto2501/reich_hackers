@@ -69,7 +69,7 @@
         <div class="terminal-body">
             <div id="terminal-output"></div>
             <div class="terminal-input-line">
-                <span class="prompt">{{ player.username }}$</span>
+                <span class="prompt">root@{{ player.username }}$</span>
                 <input type="text" id="terminal-input-field" autocomplete="off">
             </div>
         </div>
@@ -93,8 +93,8 @@
                     <div class="price">Costo: 10 <img src="/static/images/resource/ByteCoin.png"></div>
                 </div>
                 <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/shodan.png')}}"></button>
-                    <div class="tool">Shodan</div>
+                    <button id="spiderfoot" class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/spiderfoot.png')}}"></button>
+                    <div class="tool">Spiderfoot</div>
                     <div class="price">Costo: 10 <img src="/static/images/resource/ByteCoin.png"></div>
                 </div>
                 <div class="software">
@@ -119,27 +119,24 @@
             <h2>Delivery</h2>
             <div class="softwares">
                 <div class="software">
-                    <button id="set" class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/set.png')}}"></button>
+                    <button id="setoolkit" class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/set.png')}}"></button>
                     <div class="tool">Social-Engineer Toolkit (SET)</div>
                     <div class="price">Costo: 10 <img src="/static/images/resource/ByteCoin.png"></div>
                 </div>
             </div>
         </div>
+
         <div class="category">
-            <h2>Delivery</h2>
-            <!--
+            <h2>Exploitation</h2>
             <div class="softwares">
                 <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/set.png')}}"></button>
-                    <div class="tool">Social-Engineer Toolkit (SET)</div>
+                    <button id="metasploit" class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/metasploit.png')}}"></button>
+                    <div class="tool">Metasploit</div>
+                    <div class="price">Costo: 10 <img src="/static/images/resource/ByteCoin.png"></div>
                 </div>
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/beef.png')}}"></button>
-                    <div class="tool">Beef</div>
-                </div>
+
             </div>
             -->
-
         </div>
 
         <div class="category">

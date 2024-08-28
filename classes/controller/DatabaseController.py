@@ -2,6 +2,7 @@ import firebase_admin
 import logging
 import pyrebase
 from firebase_admin import credentials,auth,firestore
+from classes.model.Vulnerability import Vulnerability
 logging.basicConfig(level=logging.DEBUG , format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 class DatabaseController:
     database = None
@@ -31,3 +32,10 @@ class DatabaseController:
 
     def get_auth(self):
         return self.auth
+
+    def get_vulerability_info(self, name):
+        vulnerability = self.database.collection('vulnerabilities').document(name).get()
+        if not vulnerability.exists:
+            return None
+        else:
+            return Vulnerability(vulnerability.get('nome'), vulnerability.get('descrizione'), vulnerability.get('CVE'), vulnerability.get('CVE_descrizione'))

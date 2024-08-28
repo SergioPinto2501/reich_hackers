@@ -6,7 +6,7 @@ from classes.controller.GameController import GameController
 from classes.model.PlayerClassesModel import Player
 from classes.model.PlayerClassesModel import User
 from classes.controller.AuthController import AuthController
-
+from classes.model.Vulnerability import Vulnerability
 
 from classes.MitreAttackAPI import MitreAttackClass
 app = Flask(__name__)
@@ -189,6 +189,14 @@ def get_node_status(node_ip):
     else:
         return {'status': node.get_status()}
 
+@app.route('/get_tool_description/<tool>')
+def get_tool_description(tool):
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    description = GameController().get_tool_description(game_id, player, tool)
+    return {'description': description}
 @app.route('/check_tool/<tool>')
 def check_tool(tool):
     game_id = session.get('game_id')
@@ -200,8 +208,9 @@ def check_tool(tool):
         return {'status': 'success'}
     else:
         return {'status': 'error'}
-@app.route('/add_tool/<tool>')
-def add_tool(tool):
+@app.route('/add_tool/', methods=['POST'])
+def add_tool():
+    tool = request.get_json()
     game_id = session.get('game_id')
     user = User(session['user']['username'], session['user']['email'], session['user']['name'],
                 session['user']['surname'])
@@ -230,6 +239,14 @@ def get_node_info(node_ip):
         return {'node': 'null'}
     else:
         return {'node': node.to_dict()}
+@app.route('/get_vulnerability_info/<service>', methods=['GET'])
+def get_vulnerability_info(service):
+    vulnerability = DatabaseController().get_vulerability_info(service)
+    if isinstance(vulnerability, Vulnerability):
+        return {'vulnerability': vulnerability.to_dict()}
+    else:
+        return {'vulnerability': 'null'}
+
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
 def mitreattack_api():

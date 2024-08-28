@@ -126,3 +126,10 @@
     height: 25px;
     object-fit: cover;
 }
+/* Add this CSS to your stylesheet */
+.button-container-shop{
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Adjust the gap as needed */
+    margin-top: 10px; /* Adjust the margin as needed */
+}

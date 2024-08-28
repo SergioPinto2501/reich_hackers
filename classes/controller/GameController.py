@@ -206,7 +206,6 @@ class GameController(DatabaseController):
         return player
 
     def set_database(self, game_id, player, node_name):
-
         if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
             playerType = 1
         else:
@@ -227,13 +226,14 @@ class GameController(DatabaseController):
         else:
             playerType = 2
 
-        doc_ref = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("tools").document(tool).set({
-            "name": tool
+        doc_ref = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("tools").document(tool["name"]).set({
+            "name": tool["name"],
+            "description": tool["description"]
         })
         self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
             "ByteCoin": player.getByteCoin() - 10
         })
-        print("Tool " + tool + " added")
+        print("Tool " + tool['name'] + " added")
         return True
 
     def check_tool(self, game_id, player, tool):
@@ -246,3 +246,11 @@ class GameController(DatabaseController):
             return False
         else:
             return True
+
+    def get_tool_description(self, game_id, player, tool):
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+        tool = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("tools").document(tool).get(["description"])
+        return tool.get("description")
