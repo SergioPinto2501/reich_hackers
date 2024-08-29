@@ -3,7 +3,7 @@ document.getElementById('my_computer').onclick = openTerminal;
 document.querySelector('.terminal-controls .close').onclick = closeTerminal;
 document.querySelector('.terminal-controls .minimize').onclick = minimizeTerminal;
 document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
-
+defaultTerminalCursor = document.getElementById('terminal_name').innerHTML;
 // Aggiungi un messaggio di benvenuto quando il terminale viene aperto
 document.addEventListener('DOMContentLoaded', () => {
     const output = document.getElementById('terminal-output');
@@ -121,19 +121,22 @@ function handleTerminalInput(event) {
                 }else
                     output.innerHTML += `<div>Errore: non hai acquistato nmap</div>`;
                 break;
-            case 'vuln_scan':
-                if(toolOfPlayer.hasOwnProperty('vuln_scan')){
+            case 'spiderfoot':
+                if(toolOfPlayer.hasOwnProperty('spiderfoot')){
                     if(param)
-                        vulnScan(param);
+                        output.innerHTML += `<div>Errore: Sintassi Errata... <br>Per entrare in spidefoot digita solamente 'spiderfoot'</div>`;
                     else
-                        output.innerHTML += `<div>Errore</div>`;
-                }
-            case 'exploitDB':
-                if(toolOfPlayer.hasOwnProperty('exploitDB')){
+                        spiderfoot();
+                }else
+                    output.innerHTML += `<div>Errore: non hai acquistato spiderfoot</div>`;
+
+                break;
+            case 'searchsploit':
+                if(toolOfPlayer.hasOwnProperty('searchsploit')){
                     if(param)
-                        exploitDB(param);
+                        searchsploit(param);
                     else
-                        output.innerHTML += `<div>Errore: inserire un indirizzo IP valido</div>`;
+                        output.innerHTML += `<div>Errore:  inserisci la versione di un serivizio</div>`;
                 }else
                     output.innerHTML += `<div>Errore: non hai acquistato exploitDB</div>`;
                 break;
@@ -319,13 +322,131 @@ function vulnScan(indirizzo){
             }
         });
 }
+function spiderfoot(){
+    clear();
+    terminalCursor = document.getElementById('terminal_name');
+    defaultTerminalCursor = terminalCursor.innerHTML;
+    terminalCursor.innerHTML = "sp> ";
+    const output = document.getElementById('terminal-output');
+    output.innerHTML += `
+        <div style="">
+            <pre style="color: #ffcc00;">
+    _________      .__    .___          ___________            __
+     /   _____/_____ |__| __| _/__________\\_   _____/___   _____/  |_
+     \\_____  \\\\____ \\|  |/ __ |/ __ \\_  __ \\    __)/  _ \\ /  _ \\   __\\
+     /        \\  |_> >  / /_/ \\  ___/|  | \\/     \\(  <_> |  <_> )  |
+    /_______  /   __/|__\\____ |\\___  >__|  \\___  / \\____/ \\____/|__|
+            \\/|__|           \\/    \\/          \\/
+                    Open Source Intelligence Automation.
+                    by Steve Micallef | @spiderfoot
+    
+    [*] Version 4.0.0.
+    [*] Loaded previous command history.
+    [*] Type 'help' or '?'.
+    [*] Type CTRL-C to exit.
+            </pre>
+        </div>
+    `;
+    document.getElementById('terminal-input-field').onkeypress = handleSpiderfootInput;
+
+}
+function handleSpiderfootInput(event){
+    if (event.key === 'Enter') {
+        commandTyped = document.getElementById('terminal-input-field').value;
+        const output = document.getElementById('terminal-output');
+        output.innerHTML += `<div><span class="prompt">sp></span> ${commandTyped}</div>`;
+
+        const commandParts = commandTyped.split(' ');
+        const command = commandParts[0];
+        let param = '';
+        if(commandParts.length > 2){
+            for (let i = 1; i < commandParts.length; i++){
+                param += commandParts[i] + ' ';
+            }
+        }else
+            param = commandParts[1];
+
+        switch (command) {
+            case 'help':
+                output.innerHTML += `<br><div>
+    Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description <br> 
+     ------------------+-------------------------------------------------------<br> 
+     help [command]&nbsp;&nbsp;&nbsp;&nbsp;| This help output.<br> 
+     scan &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Inserisici un indirizzo ip per ottenere informazioni legati ad esso<br>                            
+                </div>`;
+                break;
+            case 'scan':
+                if(param){
+                    output.innerHTML += `<div>Scanning for information...</div>`;
+                    fetch("get_information_about_person/" + param)
+                        .then(response => response.json())
+                        .then(data => {
+                            if(data.information !== 'null'){
+                                output.innerHTML += `<div>&nbsp;&nbsp;&nbsp;[!] Informazion Found: </div>`;
+                                output.innerHTML += `<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[*] Related Surname : ${data.information[0]}</div>`;
+                                output.innerHTML += `<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[*] Related Name : ${data.information[1]}</div>`;
+                                output.innerHTML += `<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[*] Related Email : ${data.information[2]}</div>`;
+
+                            }else
+                                output.innerHTML += `<div>[*] No data found</div>`;
+                        });
+                }else
+                    output.innerHTML += `<div>Errore: inserire un indirizzo valido</div>`;
+                break;
+
+            case 'exit':
+                clear();
+                terminalCursor = document.getElementById('terminal_name');
+                terminalCursor.innerHTML = defaultTerminalCursor;
+                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+                break;
+            default:
+                output.innerHTML += `<div>Comando non riconosciuto. Digita “help” per visualizzare l'elenco dei comandi disponibili.</div>`;
+                break;
+        }
+        document.getElementById('terminal-input-field').value = '';
+        output.scrollTop = output.scrollHeight;
+    }
+}
+function searchsploit(servizio){
+    const output = document.getElementById('terminal-output');
+    fetch("get_exploit_info/" + servizio)
+        .then(response => response.json())
+        .then(data => {
+            if(data.exploits !== 'null'){
+                exploits = data.exploits;
+                console.log(exploits);
+                output.innerHTML += `<div>--------------------------------------------------------------------------------</div>`;
+                output.innerHTML += `<div><strong>Exploit Title | Path</strong> </div>`;
+                output.innerHTML += `<div>--------------------------------------------------------------------------------</div>`;
+                for (const [key, value] of Object.entries(exploits)) {
+                    output.innerHTML += `<div>[-] ${key} | ${value}</div>`;
+                }
+                output.innerHTML += `<div>--------------------------------------------------------------------------------</div>`;
+            }else
+                output.innerHTML += `<div>Exploit not found</div>`;
+        });
+}
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.key === 'c') {
-        clearInterval(intervalId);
-        const output = document.getElementById('terminal-output');
-        output.innerHTML += `<div>Richiesta interrotta dall'utente</div><div>--------------------</div>`;
+        if(document.getElementById('terminal').style.display !== 'none') {
+            if (document.getElementById('terminal-input-field').onkeypress === handleSpiderfootInput) {
+                clear();
+                terminalCursor = document.getElementById('terminal_name');
+                terminalCursor.innerHTML = defaultTerminalCursor;
+                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+            }
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+                const output = document.getElementById('terminal-output');
+                output.innerHTML += `<div>Richiesta interrotta dall'utente</div><div>--------------------</div>`;
+            }
+        }
     }
 });
+
+
 function getCurrentDateTime() {
     const now = new Date();
     const date = now.toLocaleDateString();

@@ -257,12 +257,12 @@ document.getElementById("exploitDB").addEventListener("click", function() {
 
     button_yes.onclick = function() {
 
-        fetch('/check_tool/exploitDB')
+        fetch('/check_tool/searchsploit')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
                     const toolData = {
-                        name: 'exploitDB',
+                        name: 'searchsploit',
                         description: 'Tool utilizzabile da terminale di ExploitDB, in modo da consultare il database di exploit.',
                     }
                     fetch('/add_tool/', {

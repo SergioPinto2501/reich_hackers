@@ -62,7 +62,7 @@ class NetworkNode:
         casual_db_port = [3306, 5432, 8080, 27017]
         casual_port = [21, 22, 25, 53, 80]
         port_to_add = 0
-        NetworkNode.vulnerable_random_numer = random.randint(0, 10)
+        NetworkNode.vulnerable_random_numer = random.randint(0, 9)
         if (NetworkNode.vulnerable_random_numer == 0):
             logging.info("Nodo non vulnerabile")
         else:
@@ -108,7 +108,6 @@ class NetworkNode:
 
     def generate_services(self, vulnerabile_index) -> Dict[int, str]:
         vulenrabile_services = {
-
             21: ["FTP vsftpd 2.3.4", "FTP vsftpd 2.0.5"],
             22: ["SSH OpenSSH 6.6"],
             25: ["SMTP Exim 4.87"],
@@ -231,6 +230,14 @@ class NetworkNode:
 
     def get_ip(self) -> str:
         return self.ip
+
+    def get_email(self) -> str:
+        return self.email
+    def get_employee_name(self) -> str:
+        return self.employeeName
+
+    def get_employee_surname(self) -> str:
+        return self.employeeSurname
 
     def generate_password(self) -> str:
         return ''.join(random.choices(string.ascii_letters + string.digits, k=16))

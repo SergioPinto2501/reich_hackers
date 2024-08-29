@@ -34,8 +34,15 @@ class DatabaseController:
         return self.auth
 
     def get_vulerability_info(self, name):
+        exploits = {}
         vulnerability = self.database.collection('vulnerabilities').document(name).get()
+        exploitsDB = self.database.collection('vulnerabilities').document(name).collection('exploits').get()
+
+
         if not vulnerability.exists:
             return None
         else:
-            return Vulnerability(vulnerability.get('nome'), vulnerability.get('descrizione'), vulnerability.get('CVE'), vulnerability.get('CVE_descrizione'))
+            for exploit in exploitsDB:
+                exploits[exploit.get("exploit_title")] = exploit.get("path")
+
+            return Vulnerability(vulnerability.get('nome'), vulnerability.get('descrizione'), vulnerability.get('CVE'), vulnerability.get('CVE_descrizione'), exploits)

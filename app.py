@@ -246,6 +246,31 @@ def get_vulnerability_info(service):
         return {'vulnerability': vulnerability.to_dict()}
     else:
         return {'vulnerability': 'null'}
+@app.route('/get_information_about_person/<node_ip>')
+def get_person_name(node_ip):
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    node = player.getNetwork().get_node_by_ip(node_ip)
+    if(node == None):
+        opponent = GameController().getOpponent(game_id, player)
+        node = opponent.getNetwork().get_node_by_ip(node_ip)
+        if(node == None):
+            return {'information': 'null'}
+        else:
+            node_info = [node.get_employee_surname(), node.get_employee_name(), node.get_email()]
+            return {'information': node_info}
+    else:
+        node_info = [node.get_employee_name(), node.get_employee_surname(), node.get_email()]
+        return {'information': node_info}
+@app.route('/get_exploit_info/<service>')
+def get_exploit_info(service):
+    vulnerability = DatabaseController().get_vulerability_info(service)
+    if isinstance(vulnerability, Vulnerability):
+        return {'exploits': vulnerability.get_exploits()}
+    else:
+        return {'exploits': 'null'}
 
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
