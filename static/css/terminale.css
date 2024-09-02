@@ -44,7 +44,7 @@
 
 .close { background-color: #ff5f56; }
 .minimize { background-color: #ffbd2e; }
-.maximize { background-color: #27c93f; }
+.add { background-color: #27c93f; }
 
 .terminal-title {
     color: #ddd;

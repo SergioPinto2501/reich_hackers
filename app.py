@@ -271,7 +271,18 @@ def get_exploit_info(service):
         return {'exploits': vulnerability.get_exploits()}
     else:
         return {'exploits': 'null'}
-
+@app.route('/send_email/', methods=['POST'])
+def send_emails():
+    email_information= request.get_json()
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    result = GameController().send_email(game_id, player, email_information)
+    if(result):
+        return {'status': 'success'}
+    else:
+        return {'status': 'error'}
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
 def mitreattack_api():
