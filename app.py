@@ -273,16 +273,42 @@ def get_exploit_info(service):
         return {'exploits': 'null'}
 @app.route('/send_email/', methods=['POST'])
 def send_emails():
-    email_information= request.get_json()
+    emails_information= request.get_json()
     game_id = session.get('game_id')
     user = User(session['user']['username'], session['user']['email'], session['user']['name'],
                 session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
-    result = GameController().send_email(game_id, player, email_information)
-    if(result):
+    sender = emails_information['emailSender']
+    subject = emails_information['subject']
+    message = emails_information['body']
+    ricevers = emails_information['email']
+    i=0
+    result = {}
+    email_info = {}
+    for reciver in ricevers:
+        email_info['receiver'] = reciver
+        email_info['sender'] = sender
+        email_info['subject'] = subject
+        email_info['message'] = message
+        result[i] = GameController().send_email(game_id, player, email_info)
+        i+=1
+
+    if True in result:
+        print("result",result)
         return {'status': 'success'}
     else:
         return {'status': 'error'}
+
+
+
+@app.route('/get_send_emails/')
+def get_send_emails():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    emails = GameController().get_send_email(game_id, player)
+    return {'emails': emails}
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
 def mitreattack_api():

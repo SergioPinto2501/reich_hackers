@@ -260,17 +260,28 @@ class GameController(DatabaseController):
         tool = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("tools").document(tool).get(["description"])
         return tool.get("description")
 
-    def send_email(self, game_id, player, email_information):
+    def send_email(self, game_id, player, email_info):
         if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
             playerType = 1
         else:
             playerType = 2
         emails = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("emails").get()
         n_emails = len(emails)
-        self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("emails").document(str(n_emails)).set({
-            "email": email_information["emailSender"],
-            "receiver": email_information["email"],
-            "subject": email_information["subject"],
-            "body": email_information["body"]
+        self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("emails").document(str(n_emails + 1)).set({
+            "from": email_info["sender"],
+            "to": email_info["receiver"],
+            "subject": email_info["subject"],
+            "body": email_info["message"]
         })
         return True
+
+    def get_send_email(self, game_id, player):
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+        emails = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("emails").get()
+        emails_list = []
+        for email in emails:
+            emails_list.append(email.to_dict())
+        return emails_list

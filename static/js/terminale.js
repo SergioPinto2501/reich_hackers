@@ -678,10 +678,14 @@ function handleMassSendEmail(event){
                         document.getElementById('terminal-input-field').onkeypress = handleSetoolkitInput;
                     }else{
                         output.innerHTML += `<div>[-] Emails not sent</div>`;
+                        output.innerHTML += `<div>[-] Press Enter to Continue or Ctrl-c to Exit</div>`;
+                        document.getElementById('terminal-input-field').onkeypress = handleSetoolkitInput;
                     }
                 });
         }else{
             output.innerHTML += `<div>[-] Emails not sent</div>`;
+            output.innerHTML += `<div>[-] Press Enter to Continue or Ctrl-c to Exit</div>`;
+            document.getElementById('terminal-input-field').onkeypress = handleSetoolkitInput;
         }
     }
 }
