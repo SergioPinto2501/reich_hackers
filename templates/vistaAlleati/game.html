@@ -13,101 +13,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/shop.css') }}">
     <!--da aggiungere all'asse-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/email-box.css') }}">
     <title>Alleati: World War II</title>
     <style>
-        .email-icon-container {
-            position: absolute;
-            top: 20px;
-            right: 200px;
-            z-index: 1000;
-        }
 
-        .email-icon {
-            font-size: 36px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .email-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #f9f9f9;
-            min-width: 250px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .email-tabs {
-            display: flex;
-            background-color: #e9e9e9;
-        }
-
-        .email-tab {
-            flex: 1;
-            background-color: inherit;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 10px;
-            transition: 0.3s;
-        }
-
-        .email-tab:hover {
-            background-color: #ddd;
-        }
-
-        .email-tab.active {
-            background-color: #ccc;
-        }
-
-        .email-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .email-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .email-item:last-child {
-            border-bottom: none;
-        }
-        .button-mail {
-            background-color: transparent;
-            border: none;
-            color: white;
-            text-align: center;
-            cursor: pointer;
-        }
-        #button-mail:focus {
-            outline: none;
-        }
-        .notification {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #4caf50;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        .notification-badge {
-            position: absolute;
-            top: 0px;
-            right: 0px;
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            padding: 5px;
-            width: 15px;
-            height: 15px;
-        }
     </style>
 
 </head>
@@ -142,36 +51,8 @@
             <button class="email-tab active" onclick="showEmails('received')">Ricevute</button>
             <button class="email-tab" onclick="showEmails('sent')">Inviate</button>
         </div>
-        <div id="receivedEmails" class="email-list">
-            <!-- Placeholder for received emails -->
-            <div class="email-item">
-                <strong>Da: Comando Alleato</strong>
-                <p>Oggetto: Aggiornamento missione</p>
-            </div>
-            <div class="email-item">
-                <strong>Da: Intelligence</strong>
-                <p>Oggetto: Nuove informazioni</p>
-            </div>
-        </div>
-        <div id="sentEmails" class="email-list" style="display: none;">
-            <!-- Placeholder for sent emails -->
-            <div class="email-item">
-                <strong>A: Quartier Generale</strong>
-                <p>Oggetto: Rapporto giornaliero</p>
-            </div>
-            <div class="email-item">
-                <strong>A: Supporto Tecnico</strong>
-                <p>Oggetto: Richiesta assistenza</p>
-            </div>
-            <div class="email-item">
-                <strong>A: Quartier Generale</strong>
-                <p>Oggetto: Rapporto giornaliero</p>
-            </div>
-            <div class="email-item">
-                <strong>A: Supporto Tecnico</strong>
-                <p>Oggetto: Richiesta assistenza</p>
-            </div>
-        </div>
+        <div id="receivedEmails" class="email-list"></div>
+        <div id="sentEmails" class="email-list" style="display: none;"></div>
     </div>
 </div>
 <button class="player-resource" onclick="explainByteCoin()">

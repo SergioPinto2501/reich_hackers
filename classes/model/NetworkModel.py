@@ -173,3 +173,9 @@ class NetworkModel:
             return name.lower() + "." + surname.lower() + "@allies.com"
         else:
             return name.lower() + "." + surname.lower() + "@axis.com"
+
+    def check_if_exist_person(self, email) -> bool:
+        for node in self.nodes:
+            if node.get_email() == email:
+                return True
+        return False

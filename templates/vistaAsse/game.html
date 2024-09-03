@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/terminale.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/shop.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/email-box.css') }}">
     <title>Potenze dell'Asse: World War II</title>
 </head>
 <body>
@@ -36,6 +38,18 @@
         </ul>
     </div>
 </nav>
+<div class="email-icon-container">
+    <!-- Example mail icon element -->
+    <button id="button-mail" class="button-mail"><i class="fas fa-envelope email-icon" id="emailIcon"></i></button>
+    <div id="emailDropdown" class="email-dropdown">
+        <div class="email-tabs">
+            <button class="email-tab active" onclick="showEmails('received')">Ricevute</button>
+            <button class="email-tab" onclick="showEmails('sent')">Inviate</button>
+        </div>
+        <div id="receivedEmails" class="email-list"></div>
+        <div id="sentEmails" class="email-list" style="display: none;"></div>
+    </div>
+</div>
 <button class="player-resource" onclick="explainByteCoin()">
     <p> {{player.ByteCoin }}</p><img src="/static/images/resource/ByteCoin.png">
 </button>
@@ -203,6 +217,7 @@
             -->
         </div>
         <script src="/static/js/shop.js"></script>
+        <script src="/static/js/email_script.js"></script>
         <script src="/static/js/terminale.js"></script>
         <script src="/static/js/asse/terminale.js"></script>
         <script src="/static/js/canvas_background.js"></script>

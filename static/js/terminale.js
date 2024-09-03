@@ -1,5 +1,6 @@
 
 const toolOfPlayer = {};
+defaultTerminalCursor = document.getElementById('terminal_name').innerHTML;
 async function fetchToolDescriptions() {
     const response = await fetch('/get_tools_list');
     const data = await response.json();

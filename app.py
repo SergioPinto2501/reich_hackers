@@ -297,10 +297,10 @@ def send_emails():
         print("result",result)
         return {'status': 'success'}
     else:
-        return {'status': 'error'}
-
-
-
+        if result:
+            return {'status': 'success'}
+        else:
+            return {'status': 'error'}
 @app.route('/get_send_emails/')
 def get_send_emails():
     game_id = session.get('game_id')
@@ -308,6 +308,15 @@ def get_send_emails():
                 session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
     emails = GameController().get_send_email(game_id, player)
+    return {'emails': emails}
+@app.route('/get_received_emails/')
+def get_received_emails():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    emails = GameController().get_received_email(game_id, player)
+    print("email ricevuto",emails)
     return {'emails': emails}
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')

@@ -1,8 +1,8 @@
 
 send_email = [];
+received_email = [];
 
 document.getElementById("button-mail").addEventListener("click", function() {
-
     var dropdown = document.getElementById("emailDropdown");
     dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
 });
@@ -16,10 +16,6 @@ function showEmails(type) {
     }
     event.currentTarget.classList.add("active");
 
-    // Simulate new email detection
-    if (type === "received") {
-        updateMailIcon();
-    }
 }
 function updateMailIcon() {
     const mailIcon = document.getElementById('button-mail');
@@ -28,23 +24,41 @@ function updateMailIcon() {
     if (!badge) {
         badge = document.createElement('span');
         badge.className = 'notification-badge';
+        badge.innerHTML = '!';
         mailIcon.appendChild(badge);
+        badge.style.display = 'block';
+    }else{
+        badge.style.display = 'block';
+
     }
+
+
+    setTimeout(() => {
+        badge.style.display = 'none';
+    }, 5000);
+
+
 }
 function insertSendEmail(){
     div = document.getElementById("sentEmails");
     div.innerHTML = "";
-    for (var i = 0; i < send_email["emails"].length; i++) {
-        var email = send_email["emails"][i];
+    if(send_email["emails"].length === 0){
         var emailDiv = document.createElement("div");
         emailDiv.className = "email-item";
-        emailDiv.innerHTML =
-            "<strong>From: " + email['from'] + "</strong> <br>" +
-            "<strong>To: " + email['to'] + "</strong><br>" +
-            "<p> Oggeto: " + email['subject'] + "</p>" +
-            "<p> Contenuto: " + email['body'] + "</p>";
-        console.log(emailDiv);
+        emailDiv.innerHTML = "<strong>Non ci sono email inviate</strong>";
         div.appendChild(emailDiv);
+    }else {
+        for (var i = 0; i < send_email["emails"].length; i++) {
+            var email = send_email["emails"][i];
+            var emailDiv = document.createElement("div");
+            emailDiv.className = "email-item";
+            emailDiv.innerHTML =
+                "<strong>From: " + email['from'] + "</strong> <br>" +
+                "<strong>To: " + email['to'] + "</strong><br>" +
+                "<p> Oggeto: " + email['subject'] + "</p>" +
+                "<p> Contenuto: " + email['body'] + "</p>";
+            div.appendChild(emailDiv);
+        }
     }
 }
 async function getSendEmail() {
@@ -60,17 +74,76 @@ async function getSendEmail() {
         console.error("Error fetching emails:", error);
     }
 }
+async function getReceivedEmail() {
+    try {
+        const response = await fetch("/get_received_emails");
+        const data = await response.text();
+        if (data) {
+            received_email = JSON.parse(data);
+        } else {
+            console.log("Error");
+        }
+    }catch (error) {
+        console.error("Error fetching emails:", error);
+    }
+}
+numberofEmails = 0;
+function insertReceivedEmail(){
+    div = document.getElementById("receivedEmails");
+    div.innerHTML = "";
+    if(received_email["emails"].length === 0){
+        var emailDiv = document.createElement("div");
+        emailDiv.className = "email-item";
+        emailDiv.innerHTML = "<strong>Non ci sono email ricevute</strong>";
+        div.appendChild(emailDiv);
+    }else {
+        if(received_email["emails"].length > numberofEmails){
+            updateMailIcon();
+            numberofEmails = received_email["emails"].length;
+        }
+        for (var i = 0; i < received_email["emails"].length; i++) {
+            var email = received_email["emails"][i];
+            var emailDiv = document.createElement("div");
+            emailDiv.className = "email-item";
+            emailDiv.innerHTML =
+                "<strong>From: " + email['from'] + "</strong> <br>" +
+                "<strong>To: " + email['to'] + "</strong><br>" +
+                "<p> Oggeto: " + email['subject'] + "</p>" +
+                "<p> Contenuto: " + email['body'] + "</p>";
+            div.appendChild(emailDiv);
+        }
+    }
+}
 
 async function fetchAndInsertEmails() {
     await getSendEmail();
     insertSendEmail();
+    await getReceivedEmail();
+    insertReceivedEmail();
 }
 
 window.addEventListener('load', function() {
+    setInterval(refreshEmails, 2000);
     fetchAndInsertEmails();
+    const terminalElement = document.getElementById("terminal");
+    const observer = new MutationObserver(handleVisibilityChange);
+    observer.observe(terminalElement, { attributes: true });
 });
 document.getElementById("button-mail").addEventListener("click", function() {
     var dropdown = document.getElementById("emailDropdown")
     dropdown.style.display === "block" ? "none" : "block";
 });
-
+function handleVisibilityChange(mutationsList) {
+    for (let mutation of mutationsList) {
+        if (mutation.attributeName === 'style') {
+            const terminal = mutation.target;
+            const isVisible = window.getComputedStyle(terminal).display !== 'none';
+            if(!isVisible){
+                fetchAndInsertEmails();
+            }
+        }
+    }
+}
+function refreshEmails(){
+    fetchAndInsertEmails();
+}

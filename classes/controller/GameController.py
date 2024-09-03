@@ -265,14 +265,31 @@ class GameController(DatabaseController):
             playerType = 1
         else:
             playerType = 2
-        emails = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("emails").get()
+        emails = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("send_emails").get()
         n_emails = len(emails)
-        self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("emails").document(str(n_emails + 1)).set({
+        self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("send_emails").document(str(n_emails + 1)).set({
             "from": email_info["sender"],
             "to": email_info["receiver"],
             "subject": email_info["subject"],
             "body": email_info["message"]
         })
+        opponent = self.getOpponent(game_id, player)
+        if(playerType == 1):
+            opponentType = 2
+        else:
+            opponentType = 1
+
+        result = opponent.getNetwork().check_if_exist_person(email_info["receiver"])
+        if(result):
+            n_recivedMail = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("received_emails").get()
+            n_recivedMail = len(n_recivedMail)
+            self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("received_emails").document(str(n_recivedMail + 1)).set({
+                "from": email_info["sender"],
+                "to": email_info["receiver"],
+                "subject": email_info["subject"],
+                "body": email_info["message"]
+            })
+
         return True
 
     def get_send_email(self, game_id, player):
@@ -280,7 +297,18 @@ class GameController(DatabaseController):
             playerType = 1
         else:
             playerType = 2
-        emails = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("emails").get()
+        emails = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("send_emails").get()
+        emails_list = []
+        for email in emails:
+            emails_list.append(email.to_dict())
+        return emails_list
+
+    def get_received_email(self, game_id, player):
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+        emails = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("received_emails").get()
         emails_list = []
         for email in emails:
             emails_list.append(email.to_dict())
