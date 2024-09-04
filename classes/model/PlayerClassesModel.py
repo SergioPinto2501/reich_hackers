@@ -5,6 +5,7 @@ class Player:
     faction = None
     network = None
     ByteCoin = 0
+    node_hacked = 0
     tools = []
     def __init__(self, username, faction):
         self.username = username
@@ -12,15 +13,17 @@ class Player:
         self.network = NetworkModel(self.faction)
         self.ByteCoin = 100
         self.tools = []
+        self.node_hacked = 0
 
     @classmethod
-    def recoveredPlayer(self, username, faction, ByteCoin, network, tools) -> 'Player':
+    def recoveredPlayer(self, username, faction, ByteCoin, network, tools, node_hacked) -> 'Player':
         self = Player.__new__(Player)
         self.username = username
         self.faction = faction
         self.ByteCoin = ByteCoin
         self.network = network
         self.tools = tools
+        self.node_hacked = node_hacked
         return self
 
     def getUsername(self):
@@ -46,6 +49,8 @@ class Player:
         return self.username + " " + self.faction + " " + str(self.ByteCoin) + " " + self.getNetworkString() + " " + self.tools
     def getTools(self):
         return self.tools
+    def getNodeHacked(self):
+        return self.node_hacked
 
 class User:
     def __init__(self, username, email, name, surname):

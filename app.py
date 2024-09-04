@@ -294,7 +294,6 @@ def send_emails():
         i+=1
 
     if True in result:
-        print("result",result)
         return {'status': 'success'}
     else:
         if result:
@@ -309,6 +308,30 @@ def get_send_emails():
     player = GameController().getPlayerFromGame(game_id, user)
     emails = GameController().get_send_email(game_id, player)
     return {'emails': emails}
+
+@app.route("/get_token_from_phishing/")
+def get_token_from_phishing():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    opponent = GameController().getOpponent(game_id, player)
+    email_which_take_token = GameController().get_token_from_phishing(game_id, player, opponent)
+    information = {}
+    index = 0
+    for node in opponent.getNetwork().get_nodes():
+        if node.get_email() in email_which_take_token:
+            if node.get_phishing_index() > 2:
+                information[index] = [
+                    node.get_employee_name(),
+                    node.get_employee_surname(),
+                    node.get_email(),
+                    node.get_token()
+                ]
+                index+=1
+
+    return {'info': information}
+
 @app.route('/get_received_emails/')
 def get_received_emails():
     game_id = session.get('game_id')
@@ -316,8 +339,24 @@ def get_received_emails():
                 session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
     emails = GameController().get_received_email(game_id, player)
-    print("email ricevuto",emails)
+
     return {'emails': emails}
+
+@app.route('/check_token/', methods=['POST'])
+def check_token():
+    token = request.form.get('token')
+
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    opponent = GameController().getOpponent(game_id, player)
+    GameController().check_token(game_id, player, opponent, token)
+    if player.getFaction() == "Asse":
+        return redirect(url_for('game_asse'))
+    else:
+        return redirect(url_for('game_alleati'))
+
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
 def mitreattack_api():

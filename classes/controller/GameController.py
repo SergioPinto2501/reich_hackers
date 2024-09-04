@@ -115,7 +115,8 @@ class GameController(DatabaseController):
             "player" + str(typeofPlayer)).set({
             "username": player.getUsername(),
             "faction": player.getFaction(),
-            "ByteCoin": player.getByteCoin()
+            "ByteCoin": player.getByteCoin(),
+            "node_hacked": player.getNodeHacked()
         })
         doc_ref = self.database.collection("games").document(str(gameId)).collection("players").document(
             "player" + str(typeofPlayer)).collection("tools")
@@ -137,7 +138,8 @@ class GameController(DatabaseController):
                 "employeeSurname": str(node.employeeSurname),
                 "email": str(node.email),
                 "password": str(node.password),
-                "token": str(node.token)
+                "token": str(node.token),
+                "phishing_index": str(node.phishing_index)
             })
 
         doc_ref = self.database.collection("games").document(str(gameId)).update({
@@ -185,7 +187,7 @@ class GameController(DatabaseController):
                 for tool in tools:
                     playerTools.append(tool.get("name"))
         player = Player.recoveredPlayer(playerToReturn.get("username"), playerToReturn.get("faction"),
-                                      playerToReturn.get("ByteCoin"), playerNetwork, playerTools)
+                                      playerToReturn.get("ByteCoin"), playerNetwork, playerTools, playerToReturn.get("node_hacked"))
 
 
         return player
@@ -206,7 +208,7 @@ class GameController(DatabaseController):
         for tool in tools:
             playerTools.append(tool.get("name"))
         player = Player.recoveredPlayer(playerFromDB.get("username"), playerFromDB.get("faction"),
-                                      playerFromDB.get("ByteCoin"), playerNetwork,playerTools)
+                                      playerFromDB.get("ByteCoin"), playerNetwork,playerTools, playerFromDB.get("node_hacked"))
 
         return player
 
@@ -289,7 +291,6 @@ class GameController(DatabaseController):
                 "subject": email_info["subject"],
                 "body": email_info["message"]
             })
-
         return True
 
     def get_send_email(self, game_id, player):
@@ -313,3 +314,50 @@ class GameController(DatabaseController):
         for email in emails:
             emails_list.append(email.to_dict())
         return emails_list
+
+    def get_token_from_phishing(self, game_id, player, opponent):
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == opponent.getUsername()):
+            opponentType = 1
+        else:
+            opponentType = 2
+        email_send_by_player = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("send_emails").get()
+        email_recived_by_opponent = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("received_emails").get()
+        print("Email inviate:")
+        for email in email_send_by_player:
+            print(email.to_dict())
+        print("Email ricevute:")
+        for email in email_recived_by_opponent:
+            print(email.to_dict())
+        print(email_recived_by_opponent)
+        email_which_take_token = []
+        for email_send in email_send_by_player:
+            for email_opponent in email_recived_by_opponent:
+                if email_send.get("to") == email_opponent.get("to"):
+                    email_which_take_token.append(email_send.get("to"))
+
+        return email_which_take_token;
+
+    def check_token(self,game_id, player, opponent, token):
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == opponent.getUsername()):
+            opponentType = 1
+        else:
+            opponentType = 2
+        opponent_network = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("network").get()
+        for node in opponent_network:
+            if node.get("token") == token:
+                node_hacked = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).get().get("node_hacked")
+                self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
+                    "ByteCoin": player.getByteCoin() + 10,
+                    "node_hacked": node_hacked + 1
+                })
+                self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("network").document(node.get("name")).update({
+                    "Compromised": True
+                })

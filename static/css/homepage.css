@@ -87,7 +87,7 @@ html, body {
     border: 1px solid black;
 }
 .player-resource {
-    width: 10%;
+    width: 120px;
     margin-right: 20px;
     float: right;
     background: black;
@@ -102,6 +102,7 @@ html, body {
     gap: 5px; /* Optional: Adjust the gap as needed */
 
 }
+
 .player-resource p {
     color: white;
     font-size: 20px;
@@ -156,4 +157,31 @@ html, body {
     max-width: 500px;
     z-index: 1000;
     font-size: 18px;
+}
+.check-token-container {
+    position: absolute;
+    top: 18px;
+    right: 265px;
+    z-index: 1000;
+}
+.button-token {
+    background-color: transparent;
+    border: none;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.button-token img {
+    width: 33px;
+    height: 33px;
+}
+#button-token:focus {
+    outline: none;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }

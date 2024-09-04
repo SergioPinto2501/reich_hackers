@@ -5,6 +5,10 @@ received_email = [];
 document.getElementById("button-mail").addEventListener("click", function() {
     var dropdown = document.getElementById("emailDropdown");
     dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    var phising = document.getElementById("phishingDropdown");
+    if(phising.style.display === "block"){
+        phising.style.display = "none";
+    }
 });
 function showEmails(type) {
     document.getElementById("receivedEmails").style.display = type === "received" ? "block" : "none";
@@ -31,8 +35,6 @@ function updateMailIcon() {
         badge.style.display = 'block';
 
     }
-
-
     setTimeout(() => {
         badge.style.display = 'none';
     }, 5000);
@@ -123,15 +125,10 @@ async function fetchAndInsertEmails() {
 }
 
 window.addEventListener('load', function() {
-    setInterval(refreshEmails, 2000);
     fetchAndInsertEmails();
     const terminalElement = document.getElementById("terminal");
     const observer = new MutationObserver(handleVisibilityChange);
     observer.observe(terminalElement, { attributes: true });
-});
-document.getElementById("button-mail").addEventListener("click", function() {
-    var dropdown = document.getElementById("emailDropdown")
-    dropdown.style.display === "block" ? "none" : "block";
 });
 function handleVisibilityChange(mutationsList) {
     for (let mutation of mutationsList) {
@@ -143,7 +140,4 @@ function handleVisibilityChange(mutationsList) {
             }
         }
     }
-}
-function refreshEmails(){
-    fetchAndInsertEmails();
 }

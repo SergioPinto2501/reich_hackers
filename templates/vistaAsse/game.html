@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/shop.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/email-box.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/phishing_information.css') }}">
+
     <title>Potenze dell'Asse: World War II</title>
 </head>
 <body>
@@ -49,6 +51,19 @@
         <div id="receivedEmails" class="email-list"></div>
         <div id="sentEmails" class="email-list" style="display: none;"></div>
     </div>
+</div>
+<div class="phishing-icon-container">
+    <!-- Example mail icon element -->
+    <button id="button-phishing" class="button-phishing"><img src="/static/images/resource/phishing-button.png"></button>
+    <div id="phishingDropdown" class="phishing-dropdown">
+        <div class="phishing-tabs">
+            <button class="phishing-tab active" >Ricevute</button>
+        </div>
+        <div id="phising-data" class="phishing-list"></div>
+    </div>
+</div>
+<div class="check-token-container">
+    <button id="button-token" class="button-token"><img src="/static/images/resource/flag.png"></button>
 </div>
 <button class="player-resource" onclick="explainByteCoin()">
     <p> {{player.ByteCoin }}</p><img src="/static/images/resource/ByteCoin.png">
@@ -153,70 +168,10 @@
             -->
         </div>
 
-        <div class="category">
-            <h2>Exploitation</h2>
-            <!--
-            <div class="softwares">
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/burp.png')}}"></button>
-                    <div class="tool">Burp Suite</div>
-                </div>
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/john.png')}}"></button>
-                    <div class="tool">John the Ripper</div>
-                </div>
-            </div>
-            -->
-        </div>
-
-        <div class="category">
-            <h2>Installation</h2>
-            <!--
-            <div class="softwares">
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/mimikatz.png')}}"></button>
-                    <div class="tool">Mimikatz</div>
-                </div>
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/responder.png')}}"></button>
-                    <div class="tool">Responder</div>
-                </div>
-            </div>
-            -->
-        </div>
-
-        <div class="category">
-            <h2>Comand & Controll</h2>
-            <!--
-            <div class="softwares">
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/cobaltstrike.png')}}"></button>
-                    <div class="tool">Cobalt Strike</div>
-                </div>
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/empire.png')}}"></button>
-                    <div class="tool">Empire</div>
-                </div>
-            </div>
-            -->
-        </div>
-
-        <div class="category">
-            <h2>Action on Objectives</h2>
-            <!--
-            <div class="softwares">
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/wireshark.png')}}"></button>
-                    <div class="tool">Wireshark</div>
-                </div>
-                <div class="software">
-                    <button class="button-img-tool"><img src="{{ url_for('static', filename='images/softwareLogo/aircrack.png')}}"></button>
-                    <div class="tool">Aircrack-ng</div>
-                </div>
-            </div>
-            -->
-        </div>
+         </div>
         <script src="/static/js/shop.js"></script>
+        <script src="/static/js/phishing_script.js"></script>
+        <script src="/static/js/check_token.js"></script>
         <script src="/static/js/email_script.js"></script>
         <script src="/static/js/terminale.js"></script>
         <script src="/static/js/asse/terminale.js"></script>

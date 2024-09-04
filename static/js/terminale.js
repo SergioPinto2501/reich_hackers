@@ -677,6 +677,7 @@ function handleMassSendEmail(event){
                         output.innerHTML += `<div>[-] Emails sent successfully</div>`;
                         output.innerHTML += `<div>[-] Press Enter to Continue or Ctrl-c to Exit</div>`;
                         document.getElementById('terminal-input-field').onkeypress = handleSetoolkitInput;
+                        getToken();
                     }else{
                         output.innerHTML += `<div>[-] Emails not sent</div>`;
                         output.innerHTML += `<div>[-] Press Enter to Continue or Ctrl-c to Exit</div>`;
@@ -771,4 +772,17 @@ function getCurrentDateTime() {
     const date = now.toLocaleDateString();
     const time = now.toLocaleTimeString();
     return `${date} ${time}`;
+}
+
+function getToken(emailSender, email, subject, body) {
+    fetch("get_token_from_phishing/", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({emailSender, email, subject, body})
+    })
+        .then(response => response.json())
+        .then(data => {
+        });
 }

@@ -49,4 +49,12 @@ function closeTerminal() {
         <div>--------------------</div>
     `;
     document.getElementById('terminal').style.display = 'none';
+    terminalCursor = document.getElementById('terminal_name');
+    terminalCursor.innerHTML = defaultTerminalCursor;
+    terminalCursor.style.color = "#33ff33";
+    terminalInput = document.getElementById('terminal-input-field');
+    terminalInput.style.color = "#33ff33";
+    output = document.getElementById('terminal-output');
+    output.style.color = "#33ff33";
+    document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
 }

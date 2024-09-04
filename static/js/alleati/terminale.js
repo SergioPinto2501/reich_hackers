@@ -35,7 +35,7 @@ function minimizeTerminal() {
 }
 
 function closeTerminal() {
-    const output = document.getElementById('terminal-output');
+    let output = document.getElementById('terminal-output');
     output.innerHTML = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <pre style="color: #ffcc00;">
@@ -51,4 +51,14 @@ function closeTerminal() {
                 <div>--------------------</div>
             `;
     document.getElementById('terminal').style.display = 'none';
+
+    terminalCursor = document.getElementById('terminal_name');
+    terminalCursor.innerHTML = defaultTerminalCursor;
+    terminalCursor.style.color = "#33ff33";
+    terminalInput = document.getElementById('terminal-input-field');
+    terminalInput.style.color = "#33ff33";
+    output = document.getElementById('terminal-output');
+    output.style.color = "#33ff33";
+    document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+
 }

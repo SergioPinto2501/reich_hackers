@@ -29,9 +29,10 @@ class NetworkNode:
         self.employeeSurname = employeeSurname
         self.email = email
         self.password = self.generate_password()
+        self.phishing_index = self.generete_phishing_index()
 
     @classmethod
-    def recover_node(self, name, ip, type, os, open_ports, services, lat, lon, city, status, token, employeeName,employeeSurname, email, password) -> 'NetworkNode':
+    def recover_node(self, name, ip, type, os, open_ports, services, lat, lon, city, status, token, employeeName,employeeSurname, email, password, phishing_index) -> 'NetworkNode':
         self = NetworkNode.__new__(NetworkNode) # Create a new instance without calling __init__
         self.name = name
         self.ip = ip
@@ -47,6 +48,8 @@ class NetworkNode:
         self.employeeSurname = employeeSurname
         self.email = email
         self.password = password
+        self.token = token
+        self.phishing_index = int(phishing_index)
         return self
 
     def generate_os(self) -> str:
@@ -199,7 +202,8 @@ class NetworkNode:
         token = ''.join(random.choices(string.ascii_letters + string.digits, k=token_length))
         return [{"type": "Token", "value": token}]
 
-
+    def generete_phishing_index(self) -> int:
+        return random.randint(1, 5)
     def genereate_ip(self) -> str:
         initial_byte = '192.168.1'
         last_byte = random.randint(1, 254)
@@ -241,3 +245,7 @@ class NetworkNode:
 
     def generate_password(self) -> str:
         return ''.join(random.choices(string.ascii_letters + string.digits, k=16))
+    def get_token(self) -> str:
+        return self.token
+    def get_phishing_index(self) -> int:
+        return self.phishing_index

@@ -72,7 +72,7 @@ class NetworkModel:
         self.nodes = []
         for node in network:
             node = NetworkNode.recover_node(node.get("name"), node.get("ip"), node.get("type"), node.get("os"), node.get("open_ports"), node.get("services"), node.get("lat"), node.get("lon"), node.get("city"), node.get("status"),
-                                            node.get("token"), node.get("employeeName"), node.get("employeeSurname"), node.get("email"), node.get("password"))
+                                            node.get("token"), node.get("employeeName"), node.get("employeeSurname"), node.get("email"), node.get("password"), node.get("phishing_index"))
             self.nodes.append(node)
 
         return self
