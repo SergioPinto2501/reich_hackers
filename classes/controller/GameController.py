@@ -353,11 +353,26 @@ class GameController(DatabaseController):
         opponent_network = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("network").get()
         for node in opponent_network:
             if node.get("token") == token:
-                node_hacked = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).get().get("node_hacked")
-                self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
-                    "ByteCoin": player.getByteCoin() + 10,
-                    "node_hacked": node_hacked + 1
-                })
-                self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("network").document(node.get("name")).update({
-                    "Compromised": True
-                })
+                if(node.get("status") != "Compromised"):
+                    if(node.get("type") == 'Database'):
+                        if(node.get("main") == True):
+                            node_hacked = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).get().get("node_hacked")
+                            self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
+                                "ByteCoin": player.getByteCoin() + 10,
+                                "node_hacked": node_hacked + 1
+                            })
+                            self.database.collection("games").document(str(game_id)).collection("players").document(
+                                "player" + str(opponentType)).collection("network").document(node.get("name")).update({
+                                "status": "Compromised"
+                            })
+                            return True
+                    else:
+                        node_hacked = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).get().get("node_hacked")
+                        self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
+                            "ByteCoin": player.getByteCoin() + 10,
+                            "node_hacked": node_hacked + 1
+                        })
+                        self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("network").document(node.get("name")).update({
+                            "status": "Compromised"
+                        })
+                        return False

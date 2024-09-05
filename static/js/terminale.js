@@ -96,6 +96,13 @@ function handleTerminalInput(event) {
                 }else
                     output.innerHTML += `<div>Errore: non hai acquistato setoolkit</div>`;
                 break;
+             case 'metasploit':
+                if(toolOfPlayer.hasOwnProperty('metaexploit')){
+                    if(param)
+                        output.innerHTML += `<div>Errore: Sintassi Errata... <br>Per utilizzare il Metaexploit digita solamente 'metaexploit'</div>`;
+                    else
+                        metasploit();
+                }
             default:
                 output.innerHTML += `<div>Comando non riconosciuto. Digita “help” per visualizzare l'elenco dei comandi disponibili.</div>`;
                 break;
@@ -503,6 +510,8 @@ function handleSetoolkitInput(event){
                 break;
             case '21':
                 clear();
+                document.getElementById('terminal-input-field').innerHTML = '';
+                startEmailAttack();
                 break;
             case '4':
                 clear();
@@ -575,9 +584,17 @@ function startMassEmailAttack(){
     output.innerHTML += `<div>Mass Email Attack</div>`;
     output.innerHTML += `<div>----------------------</div>`;
     output.innerHTML += `<div>Insert sender E-mail: </div>`;
-    document.getElementById('terminal-input-field').onkeypress = handleEmailSenderInput;
+    document.getElementById('terminal-input-field').onkeypress = handleEmailSenderInputForMassAttack;
 }
-function handleEmailSenderInput(){
+function startEmailAttack(){
+    clear();
+    output = document.getElementById('terminal-output');
+    output.innerHTML += `<div>Single Email Attack</div>`;
+    output.innerHTML += `<div>----------------------</div>`;
+    output.innerHTML += `<div>Insert sender E-mail: </div>`;
+    document.getElementById('terminal-input-field').onkeypress = handleEmailSenderInputForSingleAttack;
+}
+function handleEmailSenderInputForMassAttack(){
     if(event.key === 'Enter'){
         commandTyped = document.getElementById('terminal-input-field').value;
         document.getElementById('terminal-input-field').value = '';
@@ -588,6 +605,19 @@ function handleEmailSenderInput(){
         document.getElementById('terminal-input-field').onkeypress = handleNumberEmailForAttack;
     }
 
+}
+function handleEmailSenderInputForSingleAttack(){
+    if(event.key === 'Enter'){
+        commandTyped = document.getElementById('terminal-input-field').value;
+        document.getElementById('terminal-input-field').value = '';
+        emailSender = commandTyped;
+        output.innerHTML += `<div>[+] Sender E-mail: ${commandTyped}</div>`;
+        output.innerHTML += `<div>Insert email: </div>`
+        alert('Insert email');
+        console.log(emailSender);
+        numeroEmail = 1;
+        document.getElementById('terminal-input-field').onkeypress = handleEmailInput;
+    }
 }
 function handleNumberEmailForAttack(event){
     if(event.key === 'Enter'){
@@ -608,6 +638,7 @@ function handleNumberEmailForAttack(event){
 var index=0;
 function handleEmailInput(event){
     if(event.key === 'Enter') {
+        console.log(numeroEmail);
         numeroEmail--;
         if (numeroEmail >= 0) {
             console.log(numeroEmail);
@@ -706,12 +737,13 @@ document.addEventListener('keydown', (event) => {
                 document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
             }
             if(document.getElementById('terminal-input-field').onkeypress === handleSetoolkitInput ||
-                document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInput ||
+                document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInputForMassAttack ||
                 document.getElementById('terminal-input-field').onkeypress === handleNumberEmailForAttack ||
                 document.getElementById('terminal-input-field').onkeypress === handleEmailInput ||
                 document.getElementById('terminal-input-field').onkeypress === handleSubjectInput ||
                 document.getElementById('terminal-input-field').onkeypress === handleBodyInput ||
-                document.getElementById('terminal-input-field').onkeypress === handleMassSendEmail){
+                document.getElementById('terminal-input-field').onkeypress === handleMassSendEmail ||
+                document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInputForSingleAttack){
                 clear();
 
                 terminalCursor = document.getElementById('terminal_name');
@@ -766,7 +798,22 @@ function showDownloadSetoolkit(){
     }, 500);
 
 }
+function metasploit(){
+    clear();
+    terminalCursor = document.getElementById('terminal_name');
+    terminalCursor.innerHTML = "meta> ";
+    terminalCursor.style.color = "#ffcc00";
 
+    const output = document.getElementById('terminal-output');
+    output.style.color = "#ffcc00";
+
+    inputField = document.getElementById('terminal-input-field');
+    inputField.style.color = "#ffcc00";
+    output.innerHTML += `<div>Metasploit</div>`;
+    output.innerHTML += `<div>----------------------</div>`;
+    output.innerHTML += `<div>Insert command: </div>`;
+    document.getElementById('terminal-input-field').onkeypress = handleMetasploitInput;
+}
 function getCurrentDateTime() {
     const now = new Date();
     const date = now.toLocaleDateString();

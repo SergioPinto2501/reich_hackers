@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="static/images/icon/favicon.png">
+    <link rel="stylesheet" href="/static/css/victory.css">
+    <title>Reich Hacker: Esito</title>
+
+</head>
+<body>
+    <canvas id="network-background"></canvas>
+    <div class="container">
+        <h1>Estito della cyber guerra</h1>
+        <img class="img" id="faction-image">
+        <p class="status">Complimenti Hai vinto!</p>
+    </div>
+   <script src="/static/js/canvas_background.js"></script>
+    <script>
+        const faction = localStorage.getItem('faction');
+        const factionImage = document.getElementById('faction-image');
+        if (faction === 'Alleati') {
+            factionImage.src = '/static/images/factions/allies.png';
+        } else {
+            factionImage.src = '/static/images/factions/axis.png';
+        }
+    </script>
+</body>
+</html>

@@ -351,11 +351,15 @@ def check_token():
                 session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
     opponent = GameController().getOpponent(game_id, player)
-    GameController().check_token(game_id, player, opponent, token)
-    if player.getFaction() == "Asse":
-        return redirect(url_for('game_asse'))
+    result = GameController().check_token(game_id, player, opponent, token)
+
+    if(result):
+        return render_template('vistaUtente/victory.html', player=player)
     else:
-        return redirect(url_for('game_alleati'))
+        if player.getFaction() == "Asse":
+            return redirect(url_for('game_asse'))
+        else:
+            return redirect(url_for('game_alleati'))
 
 #Da vedere come implemnteare la chiamata all'API
 @app.route('/mitreattack-api')
