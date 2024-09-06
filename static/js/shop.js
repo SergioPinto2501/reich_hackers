@@ -407,12 +407,12 @@ document.getElementById("metasploit").addEventListener("click", function() {
     message_div.appendChild(buttonContainer);
 
     button_yes.onclick = function() {
-        fetch('/check_tool/metasploit')
+        fetch('/check_tool/msfdb')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
                     const toolData = {
-                        name: 'metasploit',
+                        name: 'msfdb',
                         description: 'Metasploit è un software di penetration testing.',
                     }
                     fetch('/add_tool/', {

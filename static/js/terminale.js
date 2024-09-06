@@ -96,13 +96,18 @@ function handleTerminalInput(event) {
                 }else
                     output.innerHTML += `<div>Errore: non hai acquistato setoolkit</div>`;
                 break;
-             case 'metasploit':
-                if(toolOfPlayer.hasOwnProperty('metaexploit')){
+             case 'msfdb':
+                if(toolOfPlayer.hasOwnProperty('msfdb')){
                     if(param)
-                        output.innerHTML += `<div>Errore: Sintassi Errata... <br>Per utilizzare il Metaexploit digita solamente 'metaexploit'</div>`;
+                        if(param === 'run' || param === 'start')
+                            metasploit();
+                        else
+                            output.innerHTML += `<div>Errore: Sintassi Errata... <br>Per utilizzare metasploit digita 'msfdb run' o 'msftp start'</div>`;
                     else
-                        metasploit();
-                }
+                        output.innerHTML += `<div>Errore: Sintassi Errata... <br>Per utilizzare metasploit digita 'msfdb run' o 'msftp start'</div>`;
+                }else
+                    output.innerHTML += `<div>Errore: non hai acquistato metasploit</div>`;
+                break;
             default:
                 output.innerHTML += `<div>Comando non riconosciuto. Digita “help” per visualizzare l'elenco dei comandi disponibili.</div>`;
                 break;
@@ -722,48 +727,6 @@ function handleMassSendEmail(event){
         }
     }
 }
-document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey && event.key === 'c') {
-        if(document.getElementById('terminal').style.display !== 'none') {
-            if (document.getElementById('terminal-input-field').onkeypress === handleSpiderfootInput) {
-                clear();
-                terminalCursor = document.getElementById('terminal_name');
-                terminalCursor.innerHTML = defaultTerminalCursor;
-                terminalCursor.style.color = "#33ff33";
-                terminalInput = document.getElementById('terminal-input-field');
-                terminalInput.style.color = "#33ff33";
-                output = document.getElementById('terminal-output');
-                output.style.color = "#33ff33";
-                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
-            }
-            if(document.getElementById('terminal-input-field').onkeypress === handleSetoolkitInput ||
-                document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInputForMassAttack ||
-                document.getElementById('terminal-input-field').onkeypress === handleNumberEmailForAttack ||
-                document.getElementById('terminal-input-field').onkeypress === handleEmailInput ||
-                document.getElementById('terminal-input-field').onkeypress === handleSubjectInput ||
-                document.getElementById('terminal-input-field').onkeypress === handleBodyInput ||
-                document.getElementById('terminal-input-field').onkeypress === handleMassSendEmail ||
-                document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInputForSingleAttack){
-                clear();
-
-                terminalCursor = document.getElementById('terminal_name');
-                terminalCursor.innerHTML = defaultTerminalCursor;
-                terminalCursor.style.color = "#33ff33";
-                terminalInput = document.getElementById('terminal-input-field');
-                terminalInput.style.color = "#33ff33";
-                output = document.getElementById('terminal-output');
-                output.style.color = "#33ff33";
-                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
-            }
-            if (intervalId) {
-                clearInterval(intervalId);
-                intervalId = null;
-                const output = document.getElementById('terminal-output');
-                output.innerHTML += `<div>Richiesta interrotta dall'utente</div><div>--------------------</div>`;
-            }
-        }
-    }
-});
 
 function showDownloadSetoolkit(){
     i = 1;
@@ -798,10 +761,36 @@ function showDownloadSetoolkit(){
     }, 500);
 
 }
+let metasploitHeader =`<div style="">
+            <pre style="color: #ffcc00;">
+                                          ____________
+     [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| $a,        |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+     [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| $S\`?a,     |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+     [%%%%%%%%%%%%%%%%%%%%__%%%%%%%%%%|       \`?a, |%%%%%%%%__%%%%%%%%%__%%__ %%%%]
+     [% .--------..-----.|  |_ .---.-.|       .,a$%|.-----.|  |.-----.|__||  |_ %%]
+     [% |        ||  -__||   _||  _  ||  ,,aS$""\`  ||  _  ||  ||  _  ||  ||   _|%%]
+     [% |__|__|__||_____||____||___._||%$P"\`       ||   __||__||_____||__||____|%%]
+     [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| \`"a,       ||__|%%%%%%%%%%%%%%%%%%%%%%%%%%]
+     [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%|____\`"a,$$__|%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+     [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        \`"$   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+     [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+    
+    
+           =[ metasploit v6.3.55-dev                          ]
+    + -- --=[ 11 exploits available                           ]
+    + -- --=[ 10 payloads available                           ]
+    + -- --=[ 5 exploitaible vulnerabilities                  ]
+    
+    Metasploit Documentation: https://docs.metasploit.com/
+
+    </pre></div>`;
 function metasploit(){
     clear();
+    exploits = undefined;
+    exploit_to_use = undefined;
+
+    document.getElementById('terminal-input-field').value = '';
     terminalCursor = document.getElementById('terminal_name');
-    terminalCursor.innerHTML = "meta> ";
     terminalCursor.style.color = "#ffcc00";
 
     const output = document.getElementById('terminal-output');
@@ -809,10 +798,148 @@ function metasploit(){
 
     inputField = document.getElementById('terminal-input-field');
     inputField.style.color = "#ffcc00";
-    output.innerHTML += `<div>Metasploit</div>`;
-    output.innerHTML += `<div>----------------------</div>`;
-    output.innerHTML += `<div>Insert command: </div>`;
+    output.innerHTML += metasploitHeader;
+    output.innerHTML += `<div>[+] Starting database...</div>`;
+    setTimeout(() => {
+        output.innerHTML += `<div>[+] Database started</div>`;
+        output.innerHTML += `<div>[+] Starting console</div>`;
+        terminalCursor.innerHTML = "mfs6> ";
+
+    }, 3000);
     document.getElementById('terminal-input-field').onkeypress = handleMetasploitInput;
+
+}
+function handleMetasploitInput(event){
+    if(event.key === 'Enter'){
+        commandTyped = document.getElementById('terminal-input-field').value;
+        document.getElementById('terminal-input-field').value = '';
+        const output = document.getElementById('terminal-output');
+
+        const commandParts = commandTyped.split(' ');
+        const command = commandParts[0];
+        let param = '';
+        if(commandParts.length > 2){
+            for (let i = 1; i < commandParts.length; i++){
+                param += commandParts[i] + ' ';
+            }
+        }else
+            param = commandParts[1];
+        switch (command) {
+            case 'help':
+                output.innerHTML += `<br><div>------------------------------------</div>`;
+                output.innerHTML += `<div>Comandi disponibili:</div>
+                <div>help - Mostra l'elenco dei comandi disponibili</div>
+                <div>clear - Pulisce il terminale</div>
+                <div>search - Cerca un exploit</div>
+                <div>use - Utilizza un exploit</div>
+                <div>show option - Mostra informazioni</div>
+                <div>exit - Chiudi metasploit</div>`;
+                output.innerHTML += `<div>------------------------------------</div><br>`;
+                break;
+            case 'search':
+                clear();
+                if(!param)
+                    output.innerHTML += `<div>Errore: inserire un servizio da cercare</div>`;
+                else{
+                    const output = document.getElementById('terminal-output');
+                    fetch("get_exploit_info/" + param)
+                        .then(response => response.json())
+                        .then(data => {
+                            if(data.exploits !== 'null'){
+                                exploits = data.exploits;
+                                output.innerHTML += `<div><strong>Matching Modules</strong> </div>`;
+                                output.innerHTML += `<div>==================================================================================</div>`;
+
+                                const table = document.createElement('table');
+                                table.style.borderCollapse = 'collapse';
+                                table.style.width = '100%';
+
+                                const headerRow = document.createElement('tr');
+                                const headers = ['#', 'Name', 'Description'];
+                                headers.forEach(headerText => {
+                                    const th = document.createElement('th');
+                                    th.style.border = 'none';
+                                    th.style.padding = '8px';
+                                    th.style.textAlign = 'left';
+                                    th.textContent = headerText;
+                                    headerRow.appendChild(th);
+                                });
+                                table.appendChild(headerRow);
+                                output.appendChild(table);
+                                length = Object.keys(exploits).length;
+                                i =0;
+                                for (const [key, value] of Object.entries(exploits)) {
+                                    if(i<length) {
+                                        const tr = document.createElement('tr');
+                                        tr.style.border = 'none';
+                                        tr.style.padding = '8px';
+                                        tr.style.textAlign = 'left';
+                                        const td1 = document.createElement('td');
+                                        td1.textContent = i;
+                                        tr.appendChild(td1);
+                                        const td2 = document.createElement('td');
+                                        td2.textContent = value;
+                                        tr.appendChild(td2);
+                                        const td3 = document.createElement('td');
+                                        td3.textContent = key;
+                                        tr.appendChild(td3);
+                                        table.appendChild(tr);
+                                        i++;
+                                    }
+                                }
+                                output.innerHTML += `<div>--------------------------------------------------------------------------------</div>`;
+                            }else
+                                output.innerHTML += `<div>Exploit not found</div>`;
+                        });
+                }break;
+            case 'use':
+                if(!param)
+                    output.innerHTML += `<div>Errore: inserire un exploit da utilizzare</div>`;
+                else{
+                    if(exploits === undefined){
+                        output.innerHTML += `<div>[-] Cerca un exploit prima di usarlo</div>`;
+                    }else{
+                        flag = false;
+                        for (const [key, value] of Object.entries(exploits)) {
+                            if(param === value){
+                                exploit_to_use = value;
+                                output.innerHTML += `<br><div>[-] Using exploit ${param}</div>`;
+                                output.innerHTML += `<div>[-] Exploit ${param} loaded</div>`;
+                                terminalCursor.innerHTML = "mfs6 (<strong>exploit: </strong> " + param + ")> ";
+                                flag = true;
+                            }
+                        }
+                        if(!flag)
+                            output.innerHTML += `<br><div>[-] Exploit not found</div>`;
+                    }
+                }break;
+            case 'show':
+                if(param === 'options'){
+                    if(exploit_to_use === undefined)
+                        output.innerHTML += `<div>[-] Seleziona un exploit prima di visualizzare le opzioni</div>`;
+                    else
+                        output.innerHTML += `<br><div>[-] Options for ${exploit_to_use}</div>`;
+                }else
+                    output.innerHTML += `<div>Errore: comando non riconosciuto</div>`;
+                break;
+            case 'exit':
+                clear();
+                terminalCursor = document.getElementById('terminal_name');
+                terminalCursor.innerHTML = defaultTerminalCursor;
+                terminalCursor.style.color = "#33ff33";
+
+                terminalInput = document.getElementById('terminal-input-field');
+                terminalInput.style.color = "#33ff33";
+
+                output.style.color = "#33ff33";
+
+                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+                break;
+            default:
+                output.innerHTML += `<div>Comando non riconosciuto. Digita “help” per visualizzare l'elenco dei comandi disponibili.</div>`;
+                break;
+        }
+    }
 }
 function getCurrentDateTime() {
     const now = new Date();
@@ -833,3 +960,56 @@ function getToken(emailSender, email, subject, body) {
         .then(data => {
         });
 }
+document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key === 'c') {
+        if(document.getElementById('terminal').style.display !== 'none') {
+            if (document.getElementById('terminal-input-field').onkeypress === handleSpiderfootInput) {
+                clear();
+                terminalCursor = document.getElementById('terminal_name');
+                terminalCursor.innerHTML = defaultTerminalCursor;
+                terminalCursor.style.color = "#33ff33";
+                terminalInput = document.getElementById('terminal-input-field');
+                terminalInput.style.color = "#33ff33";
+                output = document.getElementById('terminal-output');
+                output.style.color = "#33ff33";
+                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+            }
+            if(document.getElementById('terminal-input-field').onkeypress === handleSetoolkitInput ||
+                document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInputForMassAttack ||
+                document.getElementById('terminal-input-field').onkeypress === handleNumberEmailForAttack ||
+                document.getElementById('terminal-input-field').onkeypress === handleEmailInput ||
+                document.getElementById('terminal-input-field').onkeypress === handleSubjectInput ||
+                document.getElementById('terminal-input-field').onkeypress === handleBodyInput ||
+                document.getElementById('terminal-input-field').onkeypress === handleMassSendEmail ||
+                document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInputForSingleAttack){
+                clear();
+
+                terminalCursor = document.getElementById('terminal_name');
+                terminalCursor.innerHTML = defaultTerminalCursor;
+                terminalCursor.style.color = "#33ff33";
+                terminalInput = document.getElementById('terminal-input-field');
+                terminalInput.style.color = "#33ff33";
+                output = document.getElementById('terminal-output');
+                output.style.color = "#33ff33";
+                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+            }
+            if(document.getElementById('terminal-input-field').onkeypress === handleMetasploitInput ){
+                clear();
+                terminalCursor = document.getElementById('terminal_name');
+                terminalCursor.innerHTML = defaultTerminalCursor;
+                terminalCursor.style.color = "#33ff33";
+                terminalInput = document.getElementById('terminal-input-field');
+                terminalInput.style.color = "#33ff33";
+                output = document.getElementById('terminal-output');
+                output.style.color = "#33ff33";
+                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+            }
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+                const output = document.getElementById('terminal-output');
+                output.innerHTML += `<div>Richiesta interrotta dall'utente</div><div>--------------------</div>`;
+            }
+        }
+    }
+});
