@@ -397,13 +397,15 @@ def end_game():
         print("Partita terminata")
     else:
         print("Errore")
-#Da vedere come implemnteare la chiamata all'API
 
-@app.route('/mitreattack-api')
-def mitreattack_api():
-    api = MitreAttackClass()
-    technique = api.get_tecnique_by_id("T1003")
-    return render_template('mitreattack.html',data=technique)
+@app.route('/get_network_info/')
+def get_network_info():
+    game_id = session.get('game_id')
+    player = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, player)
+    network = [node.to_dict() for node in player.getNetwork().get_nodes()]
+    return {'network': network}
 
 if __name__ == '__main__':
     app.run(debug=True)
