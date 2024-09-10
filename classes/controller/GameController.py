@@ -355,7 +355,11 @@ class GameController(DatabaseController):
             if node.get("token") == token:
                 if(node.get("status") != "Compromised"):
                     if(node.get("type") == 'Database'):
-                        if(node.get("main") == True):
+                        try:
+                            status_db = node.get("main")
+                        except:
+                            status_db = False
+                        if(status_db == True):
                             node_hacked = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).get().get("node_hacked")
                             self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
                                 "ByteCoin": player.getByteCoin() + 10,
@@ -366,6 +370,18 @@ class GameController(DatabaseController):
                                 "status": "Compromised"
                             })
                             return True
+                        else:
+                            node_hacked = self.database.collection("games").document(str(game_id)).collection(
+                                "players").document("player" + str(playerType)).get().get("node_hacked")
+                            self.database.collection("games").document(str(game_id)).collection("players").document(
+                                "player" + str(playerType)).update({
+                                "ByteCoin": player.getByteCoin() + 10,
+                                "node_hacked": node_hacked + 1
+                            })
+                            self.database.collection("games").document(str(game_id)).collection("players").document(
+                                "player" + str(opponentType)).collection("network").document(node.get("name")).update({
+                                "status": "Compromised"
+                            })
                     else:
                         node_hacked = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).get().get("node_hacked")
                         self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
@@ -376,3 +392,56 @@ class GameController(DatabaseController):
                             "status": "Compromised"
                         })
                         return False
+    def exploit(self,game_id,player,opponent,target):
+        ip = target.get("target_ip")
+        ip = self.remove_trailing_space(ip)
+
+        port = target.get("target_port")
+        port = self.remove_trailing_space(port)
+
+        service = target.get("service")
+        service = self.remove_trailing_space(service)
+
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == opponent.getUsername()):
+            opponentType = 1
+        else:
+            opponentType = 2
+        opponent_network = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(opponentType)).collection("network").get()
+        for node in opponent_network:
+            if node.get("ip") == ip:
+                open_ports = node.get("open_ports")
+                if port in open_ports:
+                    services = node.get("services")
+                    if service in services:
+                        token = node.get("token")
+
+        return token
+
+    def end_game(self, game_id, player):
+        print(str(game_id))
+
+
+        self.database.collection("games").document(str(game_id)).set({
+            "game_id": game_id,
+            "status": "end",
+            "winner": player.getUsername()
+        })
+        return True
+
+
+    def remove_trailing_space(self, s):
+        if s.endswith(' '):
+            s = s[:-1]
+        return s
+
+    def check_game_status(self, game_id):
+        status = self.database.collection("games").document(str(game_id)).get().get("status")
+        return status
+
+    def get_game_winner(self, game_id):
+        winner = self.database.collection("games").document(str(game_id)).get().get("winner")
+        return winner

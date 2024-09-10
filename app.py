@@ -361,7 +361,44 @@ def check_token():
         else:
             return redirect(url_for('game_alleati'))
 
+@app.route('/exploit/', methods=['POST'])
+def exploit():
+    target = request.get_json()
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    oppenent = GameController().getOpponent(game_id, player)
+    token = GameController().exploit(game_id, player, oppenent, target)
+    if(token != ""):
+        return {'token': token}
+    else:
+        return {'token': 'error'}
+
+@app.route('/get_game_status/')
+def get_game_status():
+    game_id = session.get('game_id')
+    player = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    status = GameController().get_game_status(game_id, player)
+    if(status == "end"):
+        winner = GameController().get_game_winner(game_id)
+        return {'status': 'end', 'winner': winner}
+    else:
+        return {'status': status}
+
+@app.route('/end_game/')
+def end_game():
+    game_id = session.get('game_id')
+    player = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                session['user']['surname'])
+    result = GameController().end_game(game_id,player)
+    if(result):
+        print("Partita terminata")
+    else:
+        print("Errore")
 #Da vedere come implemnteare la chiamata all'API
+
 @app.route('/mitreattack-api')
 def mitreattack_api():
     api = MitreAttackClass()

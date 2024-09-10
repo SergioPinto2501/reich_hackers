@@ -96,7 +96,7 @@ function handleTerminalInput(event) {
                 }else
                     output.innerHTML += `<div>Errore: non hai acquistato setoolkit</div>`;
                 break;
-             case 'msfdb':
+            case 'msfdb':
                 if(toolOfPlayer.hasOwnProperty('msfdb')){
                     if(param)
                         if(param === 'run' || param === 'start')
@@ -618,7 +618,6 @@ function handleEmailSenderInputForSingleAttack(){
         emailSender = commandTyped;
         output.innerHTML += `<div>[+] Sender E-mail: ${commandTyped}</div>`;
         output.innerHTML += `<div>Insert email: </div>`
-        alert('Insert email');
         console.log(emailSender);
         numeroEmail = 1;
         document.getElementById('terminal-input-field').onkeypress = handleEmailInput;
@@ -846,6 +845,7 @@ function handleMetasploitInput(event){
                         .then(response => response.json())
                         .then(data => {
                             if(data.exploits !== 'null'){
+                                service = param;
                                 exploits = data.exploits;
                                 output.innerHTML += `<div><strong>Matching Modules</strong> </div>`;
                                 output.innerHTML += `<div>==================================================================================</div>`;
@@ -900,6 +900,8 @@ function handleMetasploitInput(event){
                         output.innerHTML += `<div>[-] Cerca un exploit prima di usarlo</div>`;
                     }else{
                         flag = false;
+                        target_port = undefined;
+                        target_ip = undefined;
                         for (const [key, value] of Object.entries(exploits)) {
                             if(param === value){
                                 exploit_to_use = value;
@@ -919,8 +921,100 @@ function handleMetasploitInput(event){
                         output.innerHTML += `<div>[-] Seleziona un exploit prima di visualizzare le opzioni</div>`;
                     else
                         output.innerHTML += `<br><div>[-] Options for ${exploit_to_use}</div>`;
-                }else
-                    output.innerHTML += `<div>Errore: comando non riconosciuto</div>`;
+                        const table = document.createElement('table');
+                                table.style.borderCollapse = 'collapse';
+                                table.style.width = '100%';
+
+                                const headerRow = document.createElement('tr');
+                                const headers = ['Name', 'Current Settings', 'Required', 'Description'];
+                                headers.forEach(headerText => {
+                                    const th = document.createElement('th');
+                                    th.style.border = 'none';
+                                    th.style.padding = '8px';
+                                    th.style.textAlign = 'left';
+                                    th.textContent = headerText;
+                                    headerRow.appendChild(th);
+                                });
+                                table.appendChild(headerRow);
+                                output.appendChild(table);
+                                const tr = document.createElement('tr');
+                                td = document.createElement('td');
+                                td.textContent = 'RHOSTS';
+                                td1 = document.createElement('td');
+                                td1.textContent = target_ip;
+                                tr.appendChild(td);
+                                tr.appendChild(td1);
+                                td2 = document.createElement('td');
+                                td2.textContent = 'yes';
+                                tr.appendChild(td2);
+                                td3 = document.createElement('td');
+                                td3.textContent = 'The target host(s)';
+                                tr.appendChild(td3);
+                                table.appendChild(tr);
+
+                                const tr1 = document.createElement('tr');
+                                td0 = document.createElement('td');
+                                td0.textContent = 'RPORT';
+                                tr1.appendChild(td0);
+                                td4 = document.createElement('td');
+                                td4.textContent = target_port;
+                                tr1.appendChild(td4);
+                                td5 = document.createElement('td');
+                                td5.textContent = 'yes';
+                                tr1.appendChild(td5);
+                                td6 = document.createElement('td');
+                                td6.textContent = 'The target port (TCP)';
+                                tr1.appendChild(td6);
+                                table.appendChild(tr1);
+                                output.appendChild(table);
+
+
+                }else{
+                    output.innerHTML += `<br><div>[-] Comando non riconosciuto</div>`;
+                }
+
+                break;
+            case 'set':
+                params = param.split(' ');
+                if(params[0].toUpperCase() === 'RHOSTS'){
+                    console.log(params[1]);
+                    target_ip = params[1];
+                    output.innerHTML += `<br><div>[-] RHOSTS => ${target_ip}</div>`;
+                }else if(params[0].toUpperCase() === 'RPORT'){
+                    console.log(params[1]);
+                    target_port = params[1];
+                    output.innerHTML += `<br><div>[-] RPORT => ${target_port}</div>`;
+                }
+                else{
+                    output.innerHTML += `<br><div>[-] Comando non riconosciuto</div>`;
+                }
+                break;
+            case 'exploit':
+                if(exploit_to_use === undefined || service === undefined)
+                    output.innerHTML += `<div>[-] Seleziona un exploit prima di utilizzarlo</div>`;
+                else{
+                    if(target_ip === undefined || target_port === undefined)
+                        output.innerHTML += `<div>[-] Inserisci l'indirizzo IP e la porta del target</div>`;
+                    else{
+                        output.innerHTML += `<div>[-] Attacco in corso...</div>`;
+                        fetch("exploit/", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({target_ip, target_port,service})
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.token !== 'error'){
+                                    output.innerHTML += `<div>[-] Attacco riuscito </div><br>[+] Token: ${data.token}`;
+
+                                }else{
+                                    output.innerHTML += `<div>[-] Attacco non riuscito, controllare i parametri</div>`;
+                                }
+                            });
+                    }
+                }
                 break;
             case 'exit':
                 clear();
@@ -934,6 +1028,9 @@ function handleMetasploitInput(event){
                 output.style.color = "#33ff33";
 
                 document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
+                break;
+            case 'clear':
+                clear();
                 break;
             default:
                 output.innerHTML += `<div>Comando non riconosciuto. Digita “help” per visualizzare l'elenco dei comandi disponibili.</div>`;
@@ -984,17 +1081,6 @@ document.addEventListener('keydown', (event) => {
                 document.getElementById('terminal-input-field').onkeypress === handleEmailSenderInputForSingleAttack){
                 clear();
 
-                terminalCursor = document.getElementById('terminal_name');
-                terminalCursor.innerHTML = defaultTerminalCursor;
-                terminalCursor.style.color = "#33ff33";
-                terminalInput = document.getElementById('terminal-input-field');
-                terminalInput.style.color = "#33ff33";
-                output = document.getElementById('terminal-output');
-                output.style.color = "#33ff33";
-                document.getElementById('terminal-input-field').onkeypress = handleTerminalInput;
-            }
-            if(document.getElementById('terminal-input-field').onkeypress === handleMetasploitInput ){
-                clear();
                 terminalCursor = document.getElementById('terminal_name');
                 terminalCursor.innerHTML = defaultTerminalCursor;
                 terminalCursor.style.color = "#33ff33";

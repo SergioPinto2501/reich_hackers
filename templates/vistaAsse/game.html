@@ -32,8 +32,7 @@
                         Fazione {{ player.faction }}, di {{ player.username }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Il mio Profilo</a>
-                        <a class="dropdown-item" href="#">Abbandona</a>
+                        <a id="leave" class="dropdown-item" >Abbandona</a>
                     </div>
                 </li>
             {% endif %}
@@ -185,8 +184,14 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
         <script src="https://unpkg.com/leaflet-geodesic@2.0.0/leaflet.geodesic.js"></script>
+        <script src="/static/js/check_game_status.js"></script>
 
         <script>
+            document.getElementById('leave').onclick = function() {
+                if (confirm('Sei sicuro di voler abbandonare la partita?')) {
+                    window.location.href = '/';
+                }
+            };
             window.onload = function() {
                 showMapOfOpponent();
             };
