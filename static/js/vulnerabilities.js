@@ -134,7 +134,6 @@ function addAllNodesOfPlayer() {
 }
 
 function checkVulnerableServices(nodeServices) {
-    console.log(vulenrabile_services);
     const vulnerableServices = [];
     for (const [port, service] of Object.entries(nodeServices)) {
         for (const vulnService of vulenrabile_services[port]) {
