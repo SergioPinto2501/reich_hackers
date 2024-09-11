@@ -84,7 +84,6 @@ function addAllNodesOfPlayer() {
                 p.innerHTML = "Costo Fix: 40"
                 p.className = "price";
 
-
                 imgB = document.createElement("img");
                 imgB.src = "/static/images/resource/ByteCoin.png";
                 imgB.alt = "ByteCoin";

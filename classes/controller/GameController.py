@@ -465,16 +465,12 @@ class GameController(DatabaseController):
                if(node_old_service[0]['service'] in node.get("services")):
                    actual_services = node.get("services")
                    actual_services = actual_services[1:-1]
+
                    services_array = [service.strip().replace("'", "") for service in actual_services.split(',')]
-                   print(services_array)
                    services_dict = {int(service.split(':')[0]): service.split(':')[1].lstrip() for service in services_array}
-                   print(services_dict)
+
                    for key in services_dict:
                        if key == int(node_old_service[0]['port']):
-                           print("trovato")
-                           print(node_old_service[0]['service'])
-                           print(services_dict[key])
-                           print(node_new_service[0]['service'])
                            services_dict[key] = node_new_service[0]['service']
                    self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("network").document(node_name).update({
                           "services": str(services_dict)
