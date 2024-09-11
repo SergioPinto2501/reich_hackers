@@ -65,11 +65,16 @@ class NetworkNode:
         casual_db_port = [3306, 5432, 8080, 27017]
         casual_port = [21, 22, 25, 53, 80]
         port_to_add = 0
-        NetworkNode.vulnerable_random_numer = random.randint(0, 9)
+        if(self.type == "Database"):
+            NetworkNode.vulnerable_random_numer = random.randint(1, 5)
+        else:
+            NetworkNode.vulnerable_random_numer = random.randint(0, 9)
+
         if (NetworkNode.vulnerable_random_numer == 0):
             logging.info("Nodo non vulnerabile")
         else:
             logging.info("Nodo vulnerabile - Vulnerabilità: "+ str(NetworkNode.vulnerable_random_numer))
+
 
         match NetworkNode.vulnerable_random_numer:
             case 1:
@@ -100,16 +105,13 @@ class NetworkNode:
             num_open_ports = random.randint(1, 3)
             port = random.sample(casual_port, num_open_ports)
             port += random.sample(casual_db_port, 1)
-
-        if(port_to_add not in port and port_to_add != 0):
-            if(type == "Database" and port_to_add in casual_db_port):
-                port.remove(port[0])
+            if(port_to_add not in port and port_to_add != 0):
                 port.append(port_to_add)
-
 
         return port
 
     def generate_services(self, vulnerabile_index) -> Dict[int, str]:
+
         vulenrabile_services = {
             21: ["FTP vsftpd 2.3.4", "FTP vsftpd 2.0.5"],
             22: ["SSH OpenSSH 6.6"],
@@ -203,7 +205,10 @@ class NetworkNode:
         return [{"type": "Token", "value": token}]
 
     def generete_phishing_index(self) -> int:
-        return random.randint(1, 5)
+        if(self.type == "Database"):
+            return random.randint(3, 5)
+        else:
+            return random.randint(1, 5)
     def genereate_ip(self) -> str:
         initial_byte = '192.168.1'
         last_byte = random.randint(1, 254)
