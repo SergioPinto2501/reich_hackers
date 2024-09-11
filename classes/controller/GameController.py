@@ -445,3 +445,51 @@ class GameController(DatabaseController):
     def get_game_winner(self, game_id):
         winner = self.database.collection("games").document(str(game_id)).get().get("winner")
         return winner
+
+    def repair_vulnerabilities(self,game_id,player,vulnerabilities):
+        node_name = vulnerabilities.get("name")
+        node_ip = vulnerabilities.get("ip")
+        node_old_service = vulnerabilities.get("services")
+        node_new_service = vulnerabilities.get("servicesFixit")
+        print(node_old_service[0]['port'])
+        print(node_old_service[0]['service'])
+        print(node_new_service[0]['service'])
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+
+        node = self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("network").document(node_name).get()
+        if(node.get("ip") == node_ip):
+            if(node_old_service[0]['port'] in node.get("open_ports")):
+               if(node_old_service[0]['service'] in node.get("services")):
+                   actual_services = node.get("services")
+                   actual_services = actual_services[1:-1]
+                   services_array = [service.strip().replace("'", "") for service in actual_services.split(',')]
+                   print(services_array)
+                   services_dict = {int(service.split(':')[0]): service.split(':')[1].lstrip() for service in services_array}
+                   print(services_dict)
+                   for key in services_dict:
+                       if key == int(node_old_service[0]['port']):
+                           print("trovato")
+                           print(node_old_service[0]['service'])
+                           print(services_dict[key])
+                           print(node_new_service[0]['service'])
+                           services_dict[key] = node_new_service[0]['service']
+                   self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).collection("network").document(node_name).update({
+                          "services": str(services_dict)
+                   })
+                   self.database.collection("games").document(str(game_id)).collection("players").document("player" + str(playerType)).update({
+                          "ByteCoin": player.getByteCoin() - 40
+                     })
+                   return True
+               else:
+                   return False
+            else:
+                return False
+        else:
+            return False
+
+
+
+

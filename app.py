@@ -407,6 +407,21 @@ def get_network_info():
     network = [node.to_dict() for node in player.getNetwork().get_nodes()]
     return {'network': network}
 
+@app.route('/repair_vulnerabilities/', methods=['POST'])
+def repair_vulnerabilities():
+    vulnerabilities = request.get_json()
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                  session['user']['surname'])
+    player = GameController().getPlayerFromGame(session.get('game_id'), user)
+    if(player.getByteCoin()<40):
+        return {'status': 'error'}
+    else:
+        result = GameController().repair_vulnerabilities(game_id,player, vulnerabilities)
+        if(result):
+            return {'status': 'success'}
+        else:
+            return {'status': 'error'}
 if __name__ == '__main__':
     app.run(debug=True)
 

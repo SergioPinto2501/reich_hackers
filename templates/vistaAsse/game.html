@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/shop.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/email-box.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/phishing_information.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/phishing_information.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vulnerabilities.css') }}">
 
     <title>Potenze dell'Asse: World War II</title>
 </head>
@@ -83,7 +84,7 @@
 <div id="footer" class="footer">
     <i id="my_computer" class="fas fa-desktop icon" onclick=openTerminal()></i>
     <i id="show-map-button" class="fas fa-network-wired icon" onclick=showMapOfPlayer()></i>
-    <i class="fas fa-shield-alt icon" onclick=showChoiceDB()></i>
+    <i id="show-vulnerabilities" class="fas fa-shield-alt icon" onclick=showVulnerabilities()></i>
     <i id="buy_software" class="fas fa-virus icon" onclick=showShop()></i>
 </div>
 <div id="message-for-player" class="message-for-player"></div>
@@ -168,8 +169,19 @@
 
             </div>
         </div>
+    </div>
+</div>
+<div id="vulnerabilities" class="vulnerabilities">
+    <div id="vulnerabilities-frame" class="vulnerabilities-frame">
+        <div class="vulnerabilities-header">
+            <div class="vulnerabilities-controls">
+                <span class="control close"></span>
+                <span class="control minimize"></span>
+            </div>
+        </div>
 
-         </div>
+    </div>
+</div>
         <script src="/static/js/shop.js"></script>
         <script src="/static/js/phishing_script.js"></script>
         <script src="/static/js/check_token.js"></script>
@@ -185,6 +197,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
         <script src="https://unpkg.com/leaflet-geodesic@2.0.0/leaflet.geodesic.js"></script>
         <script src="/static/js/check_game_status.js"></script>
+        <script src="/static/js/vulnerabilities.js"></script>
 
         <script>
             document.getElementById('leave').onclick = function() {

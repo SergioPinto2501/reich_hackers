@@ -21,7 +21,7 @@ function addAllNodesOfPlayer() {
         h1 = document.createElement("h1");
         h1.innerHTML = "Vulnerabilità della tua rete";
         div.appendChild(h1);
-
+        let coutnVuln = 0;
         data.network.forEach(node => {
             let services = {};
             if (node.services.startsWith('{') && node.services.endsWith('}')) {
@@ -52,7 +52,7 @@ function addAllNodesOfPlayer() {
 
             vulnerabileService = checkVulnerableServices(servicesDictionary);
             if(vulnerabileService.length !== 0) {
-
+                coutnVuln++;
                 div = document.getElementById("vulnerabilities-frame");
                 divNode = document.createElement("div");
                 divNode.className = "node";
@@ -81,7 +81,7 @@ function addAllNodesOfPlayer() {
                 divNode.appendChild(p);
 
                 p = document.createElement("div");
-                p.innerHTML = "Costo Fix: 30"
+                p.innerHTML = "Costo Fix: 40"
                 p.className = "price";
 
 
@@ -91,20 +91,26 @@ function addAllNodesOfPlayer() {
                 p.appendChild(imgB);
                 divNode.appendChild(p);
                 button = document.createElement("button");
+                button.id = node.name;
                 button.className = "button-repair";
                 button.innerHTML = "Ripara Vulnerabilità";
                 button.onclick = function() {
+                    const clickedButton = this;
+                    vulnerabileService = checkVulnerableServices(servicesDictionary);
+                    serviceToRepair = transformServices(vulnerabileService);
+
                     fetch('/repair_vulnerabilities/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ ip: node.ip, services: vulnerabileService }),
+                        body: JSON.stringify({name: clickedButton.id, ip: node.ip, services: vulnerabileService, servicesFixit: serviceToRepair}),
                     })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
+                        if (data.status === 'success') {
                             alert("Vulnerabilità riparate con successo!");
+                            window.location.reload();
                             hideVulnerabilities();
                         } else {
                             alert("Errore nella riparazione delle vulnerabilità");
@@ -115,11 +121,21 @@ function addAllNodesOfPlayer() {
                 div.appendChild(divNode);
             }
         });
+        if(coutnVuln === 0) {
+            div = document.getElementById("vulnerabilities-frame");
+            divNode = document.createElement("div");
+            divNode.className = "node";
+            h2 = document.createElement("h2");
+            h2.innerHTML = "Nessuna vulnerabilità trovata";
+            divNode.appendChild(h2);
+            div.appendChild(divNode);
+        }
 
     });
 }
 
 function checkVulnerableServices(nodeServices) {
+    console.log(vulenrabile_services);
     const vulnerableServices = [];
     for (const [port, service] of Object.entries(nodeServices)) {
         for (const vulnService of vulenrabile_services[port]) {
@@ -130,7 +146,19 @@ function checkVulnerableServices(nodeServices) {
     }
     return vulnerableServices;
 }
+function transformServices(services) {
+   const finalServices = [];
+   for (const port in services) {
+        for (const [porta, service_vul] of Object.entries(not_vulnerabile_services)) {
+            if (services[port].port === porta) {
+                finalServices.push({port: porta, service: service_vul[0]});
+            }
 
+        }
+   }
+    return finalServices;
+
+}
 const vulenrabile_services = {
             21: ["FTP vsftpd 2.3.4", "FTP vsftpd 2.0.5"],
             22: ["SSH OpenSSH 6.6"],
