@@ -8,7 +8,6 @@ from classes.model.PlayerClassesModel import User
 from classes.controller.AuthController import AuthController
 from classes.model.Vulnerability import Vulnerability
 
-from classes.MitreAttackAPI import MitreAttackClass
 app = Flask(__name__)
 app.secret_key='reich_hackers'
 auth_Controller = AuthController()
