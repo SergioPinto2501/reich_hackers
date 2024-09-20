@@ -213,6 +213,8 @@
 
             window.onload = function() {
                 showMapOfOpponent();
+                check_game_status();
+                setInterval(check_game_status, 60000);
             };
 
             function showMapOfOpponent() {

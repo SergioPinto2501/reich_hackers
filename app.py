@@ -376,15 +376,20 @@ def exploit():
 
 @app.route('/get_game_status/')
 def get_game_status():
+    print("Richiesta status")
     game_id = session.get('game_id')
     player = User(session['user']['username'], session['user']['email'], session['user']['name'],
                 session['user']['surname'])
-    status = GameController().get_game_status(game_id, player)
+    status = GameController().check_game_status(game_id)
     if(status == "end"):
         winner = GameController().get_game_winner(game_id)
+        print("Stato: ", status)
+        print("Vincitore: ", winner)
         return {'status': 'end', 'winner': winner}
     else:
+        print("Stato: ", status)
         return {'status': status}
+
 
 @app.route('/end_game/')
 def end_game():
@@ -396,6 +401,7 @@ def end_game():
         print("Partita terminata")
     else:
         print("Errore")
+    return {'status': 'end'}
 
 @app.route('/get_network_info/')
 def get_network_info():
