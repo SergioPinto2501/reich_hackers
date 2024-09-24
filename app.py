@@ -14,6 +14,8 @@ auth_Controller = AuthController()
 
 @app.route('/')
 def index():
+    session.pop('game_id', None)
+    session.pop('faction', None)
     user = session.get('user')
     return render_template('index.html', user=user)
 
@@ -368,7 +370,11 @@ def exploit():
                 session['user']['surname'])
     player = GameController().getPlayerFromGame(game_id, user)
     oppenent = GameController().getOpponent(game_id, player)
-    token = GameController().exploit(game_id, player, oppenent, target)
+    token = ""
+    try:
+        token = GameController().exploit(game_id, player, oppenent, target)
+    except:
+        token = ""
     if(token != ""):
         return {'token': token}
     else:
@@ -386,8 +392,12 @@ def get_game_status():
         print("Stato: ", status)
         print("Vincitore: ", winner)
         return {'status': 'end', 'winner': winner}
-    else:
+    elif status == "abandoned" :
+        winner = GameController().get_game_winner(game_id)
         print("Stato: ", status)
+        print("Vincitore: ", winner)
+        return {'status': status, 'winner': winner}
+    else:
         return {'status': status}
 
 
@@ -401,6 +411,8 @@ def end_game():
         print("Partita terminata")
     else:
         print("Errore")
+    session.pop('game_id', None)
+    session.pop('faction', None)
     return {'status': 'end'}
 
 @app.route('/get_network_info/')
@@ -427,6 +439,18 @@ def repair_vulnerabilities():
             return {'status': 'success'}
         else:
             return {'status': 'error'}
+
+@app.route('/leave_game/')
+def leave_game():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                  session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    GameController().leave_game(game_id, player)
+    session.pop('game_id', None)
+    session.pop('faction', None)
+
+    return {'response': 'ok'}
 if __name__ == '__main__':
     app.run(debug=True)
 

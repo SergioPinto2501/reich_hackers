@@ -486,6 +486,16 @@ class GameController(DatabaseController):
         else:
             return False
 
-
+    def leave_game(self,game_id,player):
+        if(self.database.collection("games").document(str(game_id)).collection("players").document("player1").get().get("username") == player.getUsername()):
+            playerType = 1
+        else:
+            playerType = 2
+        opponent = self.getOpponent(game_id, player)
+        self.database.collection("games").document(str(game_id)).update({
+            "status": "abandoned",
+            "winner": opponent.getUsername()
+        })
+        return True
 
 

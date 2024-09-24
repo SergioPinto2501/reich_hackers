@@ -62,13 +62,15 @@ class NetworkNode:
 
     def generate_open_ports(self) -> List[int]:
         port = []
-        casual_db_port = [3306, 5432, 8080, 27017]
+        casual_db_port = [3306, 5432]
         casual_port = [21, 22, 25, 53, 80]
         port_to_add = 0
         if(self.type == "Database"):
             NetworkNode.vulnerable_random_numer = random.randint(1, 5)
+            print("Dataabse: " + str(NetworkNode.vulnerable_random_numer))
         else:
-            NetworkNode.vulnerable_random_numer = random.randint(0, 9)
+            NetworkNode.vulnerable_random_numer = random.randint(0, 7)
+            print("Computer: " + str(NetworkNode.vulnerable_random_numer))
 
         if (NetworkNode.vulnerable_random_numer == 0):
             logging.info("Nodo non vulnerabile")
@@ -91,10 +93,6 @@ class NetworkNode:
                 port_to_add = 3306
             case 7:
                 port_to_add = 5432
-            case 8:
-                port_to_add = 8080
-            case 9:
-                port_to_add = 27017
             case _:
                 port_to_add = 0 # Default case, non vulnerabile
 
@@ -117,11 +115,9 @@ class NetworkNode:
             22: ["SSH OpenSSH 6.6"],
             25: ["SMTP Exim 4.87"],
             53: ["DNS BIND 9.4.2"],
-            80: ["HTTP Apache 2.2.34", "HTTP Apache 2.2.29"],
-            3306: ["MySQL 5.5.52", "MySQL 5.6.31", "MySQL 5.7.15"],
-            5432: ["PostgreSQL 9.3.10", "PostgreSQL 9.4.5", "PostgreSQL 9.5.2"],
-            8080: ["SQLite 3.31.1", "SQLite 3.32.0", "SQLite 3.28.0"],
-            27017: ["MongoDB 2.6.10", "MongoDB 3.4.0", "MongoDB 3.2.0"]
+            80: ["HTTP Apache 2.2.34"],
+            3306: ["MySQL 5.5.52"],
+            5432: ["PostgreSQL 9.3-11.7"]
         }
 
         #Da aggiungere alla documentazione
@@ -132,9 +128,7 @@ class NetworkNode:
             53: ["DNS BIND 9.16.12"],
             80: ["HTTP Apache 2.4.48"],
             3306: ["MySQL 8.0.25", "MySQL 8.0.23"],
-            5432: ["PostgreSQL 13.4", "PostgreSQL 12.7"],
-            8080: ["SQLite 3.35.5", "SQLite 3.34.1"],
-            27017: ["MongoDB 4.4.6", "MongoDB 4.2.14"]
+            5432: ["PostgreSQL 13.4", "PostgreSQL 12.7"]
         }
 
 
@@ -169,28 +163,14 @@ class NetworkNode:
                         service = random.choice(vulenrabile_services[port])
                     else:
                         service = random.choice(not_vulnerabile_services[port])
+
                 case 6:
-                    if(port == 443):
-                        service = random.choice(vulenrabile_services[port])
-                    else:
-                        service = random.choice(not_vulnerabile_services[port])
-                case 7:
                     if(port == 3306):
                         service = random.choice(vulenrabile_services[port])
                     else:
                         service = random.choice(not_vulnerabile_services[port])
-                case 8:
+                case 7:
                     if(port == 5432):
-                        service = random.choice(vulenrabile_services[port])
-                    else:
-                        service = random.choice(not_vulnerabile_services[port])
-                case 9:
-                    if(port == 8080):
-                        service = random.choice(vulenrabile_services[port])
-                    else:
-                        service = random.choice(not_vulnerabile_services[port])
-                case 10:
-                    if(port == 27017):
                         service = random.choice(vulenrabile_services[port])
                     else:
                         service = random.choice(not_vulnerabile_services[port])

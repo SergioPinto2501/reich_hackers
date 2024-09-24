@@ -205,9 +205,16 @@
         <script src="/static/js/check_game_status.js"></script>
         <script src="/static/js/vulnerabilities.js"></script>
         <script>
+            let intervalIdStatus;
             document.getElementById('leave').onclick = function() {
                 if (confirm('Sei sicuro di voler abbandonare la partita?')) {
-                    window.location.href = '/';
+                    fetch('/leave_game/')
+                        .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/';
+                            clearInterval(intervalIdStatus);
+                        }
+                    });
                 }
             };
 
