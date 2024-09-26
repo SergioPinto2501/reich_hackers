@@ -451,6 +451,14 @@ def leave_game():
     session.pop('faction', None)
 
     return {'response': 'ok'}
+
+@app.route('/victory/')
+def victory():
+    game_id = session.get('game_id')
+    user = User(session['user']['username'], session['user']['email'], session['user']['name'],
+                  session['user']['surname'])
+    player = GameController().getPlayerFromGame(game_id, user)
+    return render_template('vistaUtente/victory.html', player=player)
 if __name__ == '__main__':
     app.run(debug=True)
 

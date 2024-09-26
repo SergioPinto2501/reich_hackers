@@ -22,11 +22,12 @@
     <script>
         const faction = localStorage.getItem('faction');
         const factionImage = document.getElementById('faction-image');
-        if (faction === 'Alleati') {
-            factionImage.src = '/static/images/factions/allies.png';
-        } else {
+        {% if player.faction == 'Alleati' %}
+             factionImage.src = '/static/images/factions/allies.png';
+        {% else %}
             factionImage.src = '/static/images/factions/axis.png';
-        }
+        {% endif %}
+
     </script>
 </body>
 </html>

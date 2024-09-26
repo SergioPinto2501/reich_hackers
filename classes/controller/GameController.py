@@ -422,9 +422,6 @@ class GameController(DatabaseController):
         return token
 
     def end_game(self, game_id, player):
-        print(str(game_id))
-
-
         self.database.collection("games").document(str(game_id)).set({
             "game_id": game_id,
             "status": "end",

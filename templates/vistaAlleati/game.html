@@ -222,6 +222,9 @@
                 showMapOfOpponent();
                 check_game_status();
                 setInterval(check_game_status, 60000);
+                {% if player.node_hacked >= 5 %}
+                    window.location.href = '/victory/';
+                {% endif %}
             };
 
             function showMapOfOpponent() {
