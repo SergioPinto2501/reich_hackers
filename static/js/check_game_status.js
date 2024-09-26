@@ -13,7 +13,7 @@ function check_game_status() {
             h2.innerHTML = 'Game Over';
             div.appendChild(h2);
             p = document.createElement('p');
-            p.innerHTML = 'Hanno Hackerato il tuo Database Centrale! <br>La Guerra è terminata. Ha vinto ' + data.winner + '.';
+            p.innerHTML = 'La tua rete è stata compromessa! <br>La Guerra è terminata. Ha vinto <strong>' + data.winner + '</strong>.';
             div.appendChild(p)
             button = document.createElement('button');
             button.innerHTML = 'Torna alla Home';
